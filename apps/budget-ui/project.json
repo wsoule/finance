@@ -1,31 +1,45 @@
 {
-  "name": "budget-ui",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/budget-ui",
+  "name": "budget-ui",
   "projectType": "application",
+  "sourceRoot": "apps/budget-ui",
+  "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/next:build",
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
-      "options": {
-        "root": "apps/budget-ui",
-        "outputPath": "dist/apps/budget-ui"
-      },
       "configurations": {
         "development": {
           "outputPath": "apps/budget-ui"
         },
         "production": {}
+      },
+      "defaultConfiguration": "production",
+      "executor": "@nx/next:build",
+      "options": {
+        "outputPath": "dist/apps/budget-ui",
+        "root": "apps/budget-ui"
+      },
+      "outputs": [
+        "{options.outputPath}"
+      ]
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "budget-ui:build:production"
       }
     },
-    "serve": {
-      "executor": "@nx/next:server",
-      "defaultConfiguration": "development",
+    "lint": {
+      "executor": "@nx/linter:eslint",
       "options": {
-        "buildTarget": "budget-ui:build",
-        "dev": true
+        "lintFilePatterns": [
+          "apps/budget-ui/**/*.{ts,tsx,js,jsx}"
+        ]
       },
+      "outputs": [
+        "{options.outputFile}"
+      ]
+    },
+    "start": {
       "configurations": {
         "development": {
           "buildTarget": "budget-ui:build:development",
@@ -35,35 +49,29 @@
           "buildTarget": "budget-ui:build:production",
           "dev": false
         }
-      }
-    },
-    "export": {
-      "executor": "@nx/next:export",
+      },
+      "defaultConfiguration": "development",
+      "executor": "@nx/next:server",
       "options": {
-        "buildTarget": "budget-ui:build:production"
+        "buildTarget": "budget-ui:build",
+        "dev": true
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-      "options": {
-        "jestConfig": "apps/budget-ui/jest.config.ts",
-        "passWithNoTests": true
-      },
       "configurations": {
         "ci": {
           "ci": true,
           "codeCoverage": true
         }
-      }
-    },
-    "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      },
+      "executor": "@nx/jest:jest",
       "options": {
-        "lintFilePatterns": ["apps/budget-ui/**/*.{ts,tsx,js,jsx}"]
-      }
+        "jestConfig": "apps/budget-ui/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ]
     }
-  },
-  "tags": []
+  }
 }

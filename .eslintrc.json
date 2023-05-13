@@ -1,10 +1,12 @@
 {
   "root": true,
+  // Ignore everything here, then extend this file in each project.
   "ignorePatterns": ["**/*"],
   "plugins": ["@nx"],
   "overrides": [
+    // Base rules to override as needed in the below groups.
     {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "files": ["*.mjs", "*.js", "*.jsx", "*.ts", "*.tsx"],
       "rules": {
         "@nx/enforce-module-boundaries": [
           "error",
@@ -21,15 +23,127 @@
         ]
       }
     },
+    // Rules for JS code.
+    {
+      "files": ["*.mjs", "*.js", "*.jsx"],
+      "extends": ["plugin:@nx/javascript"],
+      "rules": {
+        "comma-dangle": ["error", "never"],
+        "comma-spacing": ["error", {
+          "before": false,
+          "after": true
+        }],
+        "eol-last": ["error", "always"],
+        "indent": ["error", 2, {
+          "SwitchCase": 1
+        }],
+        "linebreak-style": ["error", "unix"],
+        "max-len": ["error", {
+          "code": 100,
+          "ignoreComments": true,
+          "ignoreRegExpLiterals": true,
+          "ignoreTrailingComments": false,
+          "tabWidth": 2
+        }],
+        "no-unused-vars": ["error", {
+          "args": "all",
+          "argsIgnorePattern": "_.*",
+          "caughtErrors": "all",
+          "caughtErrorsIgnorePattern": "_.*",
+          "destructuredArrayIgnorePattern": "_.*",
+          "ignoreRestSiblings": true,
+          "vars": "all",
+          "varsIgnorePattern": "_.*"
+        }],
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"]
+      }
+    },
+    // Rules for TS code.
     {
       "files": ["*.ts", "*.tsx"],
       "extends": ["plugin:@nx/typescript"],
-      "rules": {}
+      "rules": {
+        "@typescript-eslint/adjacent-overload-signatures": "error",
+        "@typescript-eslint/array-type": ["error", {
+          "default": "array"
+        }],
+        "@typescript-eslint/ban-ts-comment": ["error", {
+          "ts-expect-error": true,
+          "ts-ignore": true,
+          "ts-nocheck": true,
+          "ts-check": true
+        }],
+        "@typescript-eslint/ban-tslint-comment": "error",
+        "@typescript-eslint/comma-dangle": ["error", "never"],
+        "@typescript-eslint/comma-spacing": ["error", {
+          "before": false,
+          "after": true
+        }],
+        "@typescript-eslint/consistent-generic-constructors": ["error", "constructor"],
+        "@typescript-eslint/consistent-indexed-object-style": ["error", "record"],
+        "@typescript-eslint/consistent-type-assertions": ["error", {
+          "assertionStyle": "as",
+          "objectLiteralTypeAssertions": "never"
+        }],
+        "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+        "@typescript-eslint/explicit-function-return-type": ["error", {
+          "allowConciseArrowFunctionExpressionsStartingWithVoid": false,
+          "allowDirectConstAssertionInArrowFunctions": false,
+          "allowExpressions": false,
+          "allowHigherOrderFunctions": false,
+          "allowTypedFunctionExpressions": true
+        }],
+        "@typescript-eslint/indent": ["error", 2, {
+          "SwitchCase": 1
+        }],
+        "@typescript-eslint/member-delimiter-style": ["error", {
+          "multiline": {
+            "delimiter": "semi",
+            "requireLast": true
+          },
+          "singleline": {
+            "delimiter": "semi",
+            "requireLast": true
+          }
+        }],
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-namespace": "off",
+        "@typescript-eslint/no-unused-vars": ["error", {
+          "args": "all",
+          "argsIgnorePattern": "_.*",
+          "caughtErrors": "all",
+          "caughtErrorsIgnorePattern": "_.*",
+          "destructuredArrayIgnorePattern": "_.*",
+          "ignoreRestSiblings": true,
+          "vars": "all",
+          "varsIgnorePattern": "_.*"
+        }],
+        "@typescript-eslint/no-var-requires": "error",
+        "@typescript-eslint/quotes": ["error", "single"],
+        "@typescript-eslint/semi": ["error", "always"],
+        // The below rules are disabled in favor of the above TypeScript equivalents.
+        "comma-dangle": "off",
+        "comma-spacing": "off",
+        "indent": "off",
+        "no-unused-vars": "off",
+        "semi": "off"
+      }
     },
+    // Rules for unit tests.
     {
-      "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nx/javascript"],
-      "rules": {}
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "@typescript-eslint/ban-ts-comment": ["error", {
+          "ts-expect-error": "allow-with-description",
+          "ts-ignore": true,
+          "ts-nocheck": true,
+          "ts-check": true
+        }]
+      }
     }
   ]
 }
