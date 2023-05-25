@@ -1,7 +1,16 @@
-# core
+# @finance/core
 
-This library was generated with [Nx](https://nx.dev).
+Core functions & types for other libraries & applications to base off from.
 
-## Building
+## Scripts
 
-Run `nx build core` to build the library.
+* `nx build core`: Builds this library.
+* `nx lint core`: Lints this library for style issues.
+* `nx test core`: Runs this library's tests (add `--watch` to rerun on source changes).
+
+## Tools
+
+Generated using the below command.
+```bash
+nx generate @nx/js:library core --publishable --importPath @finance/core
+```

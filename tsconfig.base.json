@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@finance/core": ["libs/core/src/index.ts"]
+      "@finance/core": ["libs/core/src/index.ts"],
+      "@finance/node": ["libs/node/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
