@@ -1,22 +1,22 @@
 {
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "name": "budget-ui",
+  "name": "budget-web",
   "projectType": "application",
-  "sourceRoot": "apps/budget-ui",
+  "sourceRoot": "apps/budget-web",
   "tags": [],
   "targets": {
     "build": {
       "configurations": {
         "development": {
-          "outputPath": "apps/budget-ui"
+          "outputPath": "apps/budget-web"
         },
         "production": {}
       },
       "defaultConfiguration": "production",
       "executor": "@nx/next:build",
       "options": {
-        "outputPath": "dist/apps/budget-ui",
-        "root": "apps/budget-ui"
+        "outputPath": "dist/apps/budget-web",
+        "root": "apps/budget-web"
       },
       "outputs": [
         "{options.outputPath}"
@@ -25,14 +25,14 @@
     "export": {
       "executor": "@nx/next:export",
       "options": {
-        "buildTarget": "budget-ui:build:production"
+        "buildTarget": "budget-web:build:production"
       }
     },
     "lint": {
       "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": [
-          "apps/budget-ui/**/*.{ts,tsx,js,jsx}"
+          "apps/budget-web/**/*.{ts,tsx,js,jsx}"
         ]
       },
       "outputs": [
@@ -42,18 +42,18 @@
     "start": {
       "configurations": {
         "development": {
-          "buildTarget": "budget-ui:build:development",
+          "buildTarget": "budget-web:build:development",
           "dev": true
         },
         "production": {
-          "buildTarget": "budget-ui:build:production",
+          "buildTarget": "budget-web:build:production",
           "dev": false
         }
       },
       "defaultConfiguration": "development",
       "executor": "@nx/next:server",
       "options": {
-        "buildTarget": "budget-ui:build",
+        "buildTarget": "budget-web:build",
         "dev": true
       }
     },
@@ -66,7 +66,7 @@
       },
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "apps/budget-ui/jest.config.ts",
+        "jestConfig": "apps/budget-web/jest.config.ts",
         "passWithNoTests": true
       },
       "outputs": [

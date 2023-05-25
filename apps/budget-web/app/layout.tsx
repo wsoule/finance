@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Head>
-        <title>Welcome to budget-ui!</title>
+        <title>Welcome to budget-web!</title>
       </Head>
       <body>
         TOP OF LAYOUT
