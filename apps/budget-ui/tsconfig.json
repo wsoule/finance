@@ -27,7 +27,8 @@
     "**/*.js",
     "**/*.jsx",
     "next-env.d.ts",
-    "../../apps/budget-ui/.next/types/**/*.ts"
+    "../../apps/budget-ui/.next/types/**/*.ts",
+    "../../dist/apps/budget-ui/.next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
