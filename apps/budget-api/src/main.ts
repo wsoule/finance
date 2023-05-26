@@ -1,14 +1,12 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
-import express from 'express';
-import * as path from 'path';
+import { default as cors } from 'cors';
+import { default as express } from 'express';
+import { join as pathJoin } from 'path';
 
 const app = express();
 
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use(cors());
+
+app.use('/assets', express.static(pathJoin(__dirname, 'assets')));
 
 app.get('/api', (_req, res) => {
   res.send({ message: 'Welcome to budget-api!' });
