@@ -8,7 +8,10 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "rules": {}
+      "rules": {
+        // The 'indent' rule is not playing nice with decorators.
+        "@typescript-eslint/indent": "off"
+      }
     },
     {
       "files": ["*.js", "*.jsx"],

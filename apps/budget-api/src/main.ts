@@ -1,19 +1,51 @@
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { default as bodyParser } from 'body-parser';
 import { default as cors } from 'cors';
-import { default as express } from 'express';
+import { default as express, Express } from 'express';
+import { createServer as createHttpServer } from 'http';
 import { join as pathJoin } from 'path';
+import 'reflect-metadata';
+import { buildSchema } from 'type-graphql';
+import { resolvers } from './resolvers';
 
-const app = express();
+async function addGraphQLMiddleware(
+  app: Express
+): Promise<void> {
+  const graphQlServer = new ApolloServer({
+    plugins: [ApolloServerPluginDrainHttpServer({
+      httpServer: createHttpServer(app)
+    })],
+    schema: await buildSchema({
+      resolvers,
+      validate: true
+    })
+  });
+  await graphQlServer.start();
+  app.use('/graphql', expressMiddleware(graphQlServer));
+}
 
-app.use(cors());
+async function main(): Promise<void> {
+  const app = express();
 
-app.use('/assets', express.static(pathJoin(__dirname, 'assets')));
+  app.use(cors());
 
-app.get('/api', (_req, res) => {
-  res.send({ message: 'Welcome to budget-api!' });
-});
+  app.use(bodyParser.json());
 
-const port = process.env.PORT || 3333;
-const server = app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}/api`);
-});
-server.on('error', console.error);
+  app.use('/assets', express.static(pathJoin(__dirname, 'assets')));
+
+  app.get('/api', (_req, res) => {
+    res.send({ message: 'Welcome to budget-api'});
+  });
+
+  await addGraphQLMiddleware(app);
+
+  const port = process.env.PORT || 3333;
+  const server = app.listen(port, () => {
+    console.log(`Listening at http://localhost:${port}/api`);
+  });
+  server.on('error', console.error);
+}
+
+main();
