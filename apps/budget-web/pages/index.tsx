@@ -1,16 +1,28 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
+import { useUserDetailsQuery } from '../generated/graphql';
 
 export const Page: FC = () => {
-  const [content, setContent] = useState<string | null>(null);
-  useEffect(() => {
-    (async (): Promise<void> => {
-      const newContent = (await (await fetch('http://localhost:3333/api')).json()).message;
-      setContent(newContent);
-    })();
-  }, []);
+  const [search, setSearch] = useState('foob');
+  const [{ data: userDetails, fetching }] = useUserDetailsQuery({ //what is the data: userDetails
+    variables: {
+      input: { username : search }
+    }
+  });
 
   return (
-    <>{content ?? 'Loading...'}</>
+    <>
+      <div>
+        <input
+          onChange={(e): void => setSearch(e.currentTarget.value)}
+          value={search}
+        />
+      </div>
+      <div>
+        {(!fetching && userDetails) ? (
+          userDetails.userDetails?.email ?? 'Not Found'
+        ) : 'Loading...'}
+      </div>
+    </>
   );
 };
 

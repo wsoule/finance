@@ -8,8 +8,8 @@ import { UserDetailsInput } from './types';
 
 const fakeUsers = [
   { id: '123', username: 'foob'},
-  { id: '456', username: 'user 2'},
-  { id: '789', username: 'user 3'}
+  { id: '456', username: 'user-2'},
+  { id: '789', username: 'user-3'}
 ].map(({ id, username }) => {
   const user = new User();
   user.id = id;

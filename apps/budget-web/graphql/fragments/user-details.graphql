@@ -1,0 +1,4 @@
+fragment UserDetails on User {
+  email,
+  username
+}

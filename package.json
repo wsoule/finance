@@ -4,6 +4,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build:all": " nx run-many --targets=lint,test,build --all",
+    "gen:graphql": "graphql-codegen --config codegen.yml",
     "graph": "nx graph"
   },
   "private": true,
@@ -21,9 +22,14 @@
     "react-dom": "18.2.0",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.5.2",
-    "type-graphql": "^2.0.0-beta.2"
+    "type-graphql": "^2.0.0-beta.2",
+    "urql": "^4.0.2"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^4.0.0",
+    "@graphql-codegen/typescript": "^4.0.0",
+    "@graphql-codegen/typescript-operations": "^4.0.0",
+    "@graphql-codegen/typescript-urql": "^3.7.3",
     "@nx/cypress": "16.1.4",
     "@nx/eslint-plugin": "16.1.4",
     "@nx/express": "^16.1.4",

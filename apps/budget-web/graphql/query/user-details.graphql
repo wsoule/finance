@@ -1,0 +1,6 @@
+query userDetails($input: UserDetailsInput!) {
+  userDetails(input: $input) {
+    ...UserDetails
+  }
+}
+# could explain this a little bit and the fragments
