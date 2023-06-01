@@ -16,7 +16,9 @@ When installing the tools needed for development see the [tools section](#tools)
 ## Scripts
 
 * `yarn build:all`: Lints, tests, and builds all projects. Use prior to pushing changes to make sure nothing is broken.
+* `yarn gen:graphql`: Generate frontend GraphQL types based on running APIs.
 * `yarn graph`: See a diagram of the dependencies of the projects.
+* `yarn start`: Run `api` & `web` projects concurrently.
 
 ## Tools
 
