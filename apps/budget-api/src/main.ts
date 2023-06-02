@@ -8,14 +8,10 @@ import { createServer as createHttpServer } from 'http';
 import { join as pathJoin } from 'path';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
-import { resolvers } from './resolvers';
 import { DataSource } from 'typeorm';
 import { entities } from './entities';
-
-const {
-  FINANCE_SQL_DATABASE_PASSWORD: databasePassword,
-  FINANCE_SQL_DATABASE_USERNAME: databaseUsername
-} = process.env;
+import { environment } from './environments';
+import { resolvers } from './resolvers';
 
 async function addGraphQLMiddleware(
   app: Express
@@ -34,18 +30,11 @@ async function addGraphQLMiddleware(
 }
 
 async function initializeDataSource(): Promise<void> {
+  const { databaseOptions } = environment;
   const dataSource = new DataSource({
-    database: 'finance',
-    entities,
-    host: 'localhost',
-    logging: false,
-    password: databasePassword,
-    port: 5432,
-    synchronize: true,
-    type: 'postgres',
-    username: databaseUsername
+    ...databaseOptions,
+    entities
   });
-
   await dataSource.initialize();
 }
 

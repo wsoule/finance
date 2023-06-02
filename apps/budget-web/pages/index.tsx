@@ -3,7 +3,7 @@ import { useUserDetailsQuery } from '../generated/graphql';
 
 export const Page: FC = () => {
   const [search, setSearch] = useState('foob');
-  const [{ data: userDetails, fetching }] = useUserDetailsQuery({ //what is the data: userDetails
+  const [{ data: userDetails, fetching }] = useUserDetailsQuery({
     variables: {
       input: { username : search }
     }
@@ -13,7 +13,7 @@ export const Page: FC = () => {
     <>
       <div>
         <input
-          onChange={(e): void => setSearch(e.currentTarget.value)}
+          onChange={(event): void => setSearch(event.currentTarget.value)}
           value={search}
         />
       </div>

@@ -39,6 +39,21 @@
         "{options.outputFile}"
       ]
     },
+    "setup": {
+      "configurations": {
+        "development": {
+          "args": "--path=apps/budget-web --env=development"
+        },
+        "production": {
+          "args": "--path=apps/budget-web --env=production"
+        }
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "args": "--path=apps/budget-web --env=local",
+        "command": "node libs/core/scripts/setup-environment.js --path={args.path} --env={args.env}"
+      }
+    },
     "start": {
       "configurations": {
         "development": {

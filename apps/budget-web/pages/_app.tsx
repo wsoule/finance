@@ -5,10 +5,11 @@ import {
   cacheExchange,
   fetchExchange
 } from 'urql';
+import { environment } from '../environments';
 
 const client = new UrqlClient({
-  url: 'http://localhost:3333/graphql',
-  exchanges: [cacheExchange, fetchExchange] //what is this
+  url: `${environment.apiUrl}/graphql`,
+  exchanges: [cacheExchange, fetchExchange]
 });
 
 export const App: React.FC<AppProps> = ({ Component, pageProps }) => {
