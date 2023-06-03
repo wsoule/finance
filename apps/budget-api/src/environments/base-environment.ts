@@ -2,14 +2,14 @@ import { Environment } from './types';
 
 function getEnvVariable(variableName: string): string {
   const value = process.env[variableName];
-  if (!value) {
+  if (!value?.trim()) {
     throw new Error(`Environment variable '${variableName} is not set.`);
   }
 
   return value;
 }
 
-type BaseKeys = 'databaseOptions';
+type BaseKeys = 'databaseOptions' | 'isProd' | 'session';
 
 export const baseEnvironment: Pick<Environment, BaseKeys> = {
   databaseOptions: {
@@ -21,5 +21,11 @@ export const baseEnvironment: Pick<Environment, BaseKeys> = {
     synchronize: true,
     type: 'postgres',
     username: getEnvVariable('FINANCE_SQL_DATABASE_USERNAME')
+  },
+  isProd: false,
+  session: {
+    cookieName: 'session',
+    secret: getEnvVariable('EXPRESS_SESSION_SECRET')
   }
+  // What is this?
 };

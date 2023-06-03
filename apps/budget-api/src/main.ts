@@ -2,9 +2,12 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { default as bodyParser } from 'body-parser';
+import { default as RedisStore } from 'connect-redis';
 import { default as cors } from 'cors';
 import { default as express, Express } from 'express';
+import { default as expressSession } from 'express-session';
 import { createServer as createHttpServer } from 'http';
+import { default as IoRedis } from 'ioredis';
 import { join as pathJoin } from 'path';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
@@ -12,21 +15,60 @@ import { DataSource } from 'typeorm';
 import { entities } from './entities';
 import { environment } from './environments';
 import { resolvers } from './resolvers';
+import { AppContext } from './types';
 
 async function addGraphQLMiddleware(
   app: Express
 ): Promise<void> {
+  const httpServer = createHttpServer(app);
   const graphQlServer = new ApolloServer({
-    plugins: [ApolloServerPluginDrainHttpServer({
-      httpServer: createHttpServer(app)
-    })],
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer })
+    ],
     schema: await buildSchema({
       resolvers,
       validate: true
     })
   });
+
   await graphQlServer.start();
-  app.use('/graphql', expressMiddleware(graphQlServer));
+
+  app.use(
+    '/graphql',
+    expressMiddleware(graphQlServer, {
+      context: async ({ req, res }): Promise<AppContext> => {
+        return {
+          request: req,
+          response: res
+        };
+      }
+    })
+  );
+}
+
+async function addRedisSessionMiddleware(app: Express): Promise<void> {
+  const dayInMilliseconds = 24 * 60 * 60 * 1000;
+  const client = new IoRedis(); //what is IoRedis
+  const { isProd, session } = environment;
+
+  app.use(
+    expressSession({
+      name: session.cookieName,
+      cookie: {
+        httpOnly: true,
+        maxAge: 30 * dayInMilliseconds,
+        sameSite: 'lax',
+        secure: isProd
+      },
+      resave: false,
+      saveUninitialized: false,
+      secret: session.secret,
+      store: new RedisStore({
+        client,
+        disableTouch: true
+      })
+    })
+  );
 }
 
 async function initializeDataSource(): Promise<void> {
@@ -52,8 +94,9 @@ async function main(): Promise<void> {
   });
 
   await Promise.all([
-    initializeDataSource(),
-    addGraphQLMiddleware(app)
+    addGraphQLMiddleware(app),
+    addRedisSessionMiddleware(app),
+    initializeDataSource()
   ]);
 
   const port = process.env.PORT || 3333;

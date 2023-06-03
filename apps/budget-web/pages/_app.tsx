@@ -6,6 +6,7 @@ import {
   fetchExchange
 } from 'urql';
 import { environment } from '../environments';
+import { ChakraProvider } from '@chakra-ui/react';
 
 const client = new UrqlClient({
   url: `${environment.apiUrl}/graphql`,
@@ -14,9 +15,11 @@ const client = new UrqlClient({
 
 export const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
-    <UrlqlProvider value={client}>
-      <Component {...pageProps} />
-    </UrlqlProvider>
+    <ChakraProvider>
+      <UrlqlProvider value={client}>
+        <Component {...pageProps} />
+      </UrlqlProvider>
+    </ChakraProvider>
   );
 };
 
