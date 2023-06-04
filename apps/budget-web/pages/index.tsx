@@ -6,22 +6,7 @@ import Link from 'next/link';
 
 export const Page: FC = () => {
   const router = useRouter();
-  const [search, setSearch] = useState('');
-  const [{ data: userDetails, fetching }] = useUserDetailsQuery({
-    variables: {
-      input: { username : search }
-    }
-  });
-  const [, userLogin] = useUserLoginMutation();
-
-  const onLogin = async (): Promise<void> => {
-    console.log(await userLogin({
-      input: {
-        password: '1234',
-        username: 'user1'
-      }
-    }));
-  };
+  
   const openLogin = (): void => {
     router.push('/login');
   };

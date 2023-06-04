@@ -1,17 +1,29 @@
-import { Button } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
+import { Formik } from 'formik';
+import { useUserDetailsQuery, useUserLoginMutation } from '../../generated/graphql';
 import { useRouter } from 'next/router';
-import { FC } from 'react';
+import { FC, ReactNode, useState } from 'react';
 
 export const LoginPage: FC = () => {
   const router = useRouter();
+  const toast = useToast();
+  const [username, setUsername] = useState('');
+  // const [{ data: userDetails, fetching }] = useUserDetailsQuery({
+  //   variables: {
+  //     input: { username : username }
+  //   }
+  // });
+  const [, userLogin] = useUserLoginMutation();
 
-  const goHome = (): void => {
-    router.push('/');
-  };
   return (
-    <Button onClick={goHome}>
-    Home
-    </Button>
+    <Formik
+      initialValues={{ password: '', username: ''}}
+      onSubmit={async (values): Promise<void> => {
+        console.log(await userLogin({ input: values }));
+      }}
+    >
+    </Formik>
+
   );
 };
 

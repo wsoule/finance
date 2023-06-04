@@ -3,4 +3,3 @@ query userDetails($input: UserDetailsInput!) {
     ...UserDetails
   }
 }
-# could explain this a little bit and the fragments
