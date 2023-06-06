@@ -1,4 +1,5 @@
 import { GraphQLError } from 'graphql';
+
 import { FormErrorMessages } from '../../forms';
 
 // TODO: Methods like this belong on the error classes as `isInstance` methods.
