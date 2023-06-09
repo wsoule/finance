@@ -54,7 +54,7 @@ export class UserResolver {
   async userDetails(
     @Arg('input', () => UserDetailsInput, { nullable: true })
     input: UserDetailsInput | null,
-    @Ctx() { request }: AppContext //what does the @Ctx() do and the @Arg?
+    @Ctx() { request }: AppContext
   ): Promise<User | null> {
     const { username } = input ?? {};
     const { userId } = request.session;
@@ -82,7 +82,6 @@ export class UserResolver {
       { email: username }
     ]});
 
-// what is argon2 and what does it do?
     if (!existingUser || !await argon2.verify(existingUser.password, password)) {
       throw new BaseError(
         'Invalid username or password',

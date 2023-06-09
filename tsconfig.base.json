@@ -16,8 +16,14 @@
     "baseUrl": ".",
     "paths": {
       "@finance/core": ["libs/core/src/index.ts"],
-      "@finance/node": ["libs/node/src/index.ts"]
-    }
+      "@finance/node": ["libs/node/src/index.ts"],
+      "@finance/react": ["libs/react/src/index.ts"]
+    },
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ]
   },
   "exclude": ["node_modules", "tmp"]
 }

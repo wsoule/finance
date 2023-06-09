@@ -8,7 +8,7 @@ export interface FormGroupErrorMessages<T> extends FormControlErrorMessages {
   };
 }
 
-export module FormGroupErrorMessages {
+export namespace FormGroupErrorMessages {
   export function isInstance<T>(validation: any): validation is FormGroupErrorMessages<T> {
     if (!FormControlErrorMessages.isInstance(validation)) {
       return false;
@@ -20,6 +20,6 @@ export module FormGroupErrorMessages {
       typeof children === 'object'
       && !(children instanceof Array)
       && Object.values(children).every((child): boolean => FormControlErrorMessages.isInstance(child))
-      );
+    );
   }
 }

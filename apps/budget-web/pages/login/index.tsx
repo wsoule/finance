@@ -1,19 +1,41 @@
-import { useToast, Input, FormLabel, HStack, Button, FormControl, FormErrorMessage } from '@chakra-ui/react';
-import { Field, Form, Formik } from 'formik';
-// import { useRouter } from 'next/router';
-import { FC } from 'react';
+import { useToast, Button, Stack } from '@chakra-ui/react';
+import { Form, Formik } from 'formik';
+import { FC, useState } from 'react';
 
 import { useUserLoginMutation } from '../../generated/graphql';
-import { handleFormErrorMessages } from '../../../../libs/';
+import { InputField, Link, handleFormErrorMessages } from '@finance/react';
+
+export interface LoginFormValues {
+  username: string;
+  password: string;
+}
 
 export const LoginPage: FC = () => {
-  // const router = useRouter();
   const toast = useToast();
   const [, userLogin] = useUserLoginMutation();
+  const [disable, setDisable] = useState(true);
+
+  const validateForm = (values: LoginFormValues): Partial<LoginFormValues> => {
+    const errors: Partial<LoginFormValues> = {};
+
+    if (!values.username) {
+      errors.username = 'Username is required';
+    }
+    if (!values.password) {
+      errors.password = 'Password is required';
+    }
+    if (!errors.username && !errors.password){
+      setDisable(false);
+    } else {
+      setDisable(true);
+    }
+    return errors;
+  };
 
   return (
     <Formik
       initialValues={{ password: '', username: ''}}
+      validate={validateForm}
       onSubmit={async (values, { setErrors }): Promise<void> => {
         const response = await userLogin({ input: values });
         handleFormErrorMessages(response, setErrors, toast);
@@ -21,29 +43,17 @@ export const LoginPage: FC = () => {
       }}
     >{({ isSubmitting }): JSX.Element => (
         <Form className='spaced-rows'>
-          <Field name='username'>
-            {({ field, form }): JSX.Element => (
-              <FormControl isInvalid={form.errors.name && form.touched.name}>
-                <FormLabel>Username</FormLabel>
-                <Input {...field} placeholder='username' />
-                <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-              </FormControl>
-            )}
-          </Field>
-          <Field name='password'>
-            {({ field, form }): JSX.Element => (
-              <FormControl isInvalid={form.errors.name && form.touched.name}>
-                <FormLabel>Password</FormLabel>
-                <Input {...form} placeholder='password' />
-                <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-              </FormControl>
-            )}
-          </Field>
-          <Button isLoading={isSubmitting}
-            type='submit'
-          >
+          <InputField label='Username' name='username' placeholder='username' />
+          <InputField label='Password' name='password' placeholder='password' type='password'/>
+          <Stack direction='row' justifyContent='center' spacing='1rem'>
+            <Link label='Go Home' route='/' />
+          </Stack>
+          <Stack direction='row' justifyContent='end' spacing='1rem'>
+            <Button isLoading={isSubmitting} isDisabled={disable}
+              type='submit'>
           submit
-          </Button>
+            </Button>
+          </Stack>
         </Form>
       )}
     </Formik>
@@ -51,15 +61,3 @@ export const LoginPage: FC = () => {
 };
 
 export default LoginPage;
-
-/*
-<FormLabel>Username</FormLabel>
-          <Input name='username' placeholder='username' />
-          <Input name='password' placeholder='password' />
-          <HStack spacing={'1rem'} justifyContent={'center'} direction={'row'}>
-            <Link href={'/'}>ME TOO</Link>
-          </HStack>
-          <HStack direction={'row'} justifyContent={'end'} spacing={'1rem'}>
-            <Button isLoading={isSubmitting} type='submit'>Log In</Button>
-          </HStack>
-          */

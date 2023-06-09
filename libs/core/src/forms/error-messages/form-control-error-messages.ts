@@ -2,10 +2,10 @@ export interface FormControlErrorMessages {
   control?: string[];
 }
 
-export module FormControlErrorMessages {
+export namespace FormControlErrorMessages {
   export function isInstance(
     validation: any
-    ): validation is FormControlErrorMessages {
+  ): validation is FormControlErrorMessages {
     if (!validation || typeof validation !== 'object') {
       return false;
     }
@@ -15,6 +15,6 @@ export module FormControlErrorMessages {
     return control == null || (
       control instanceof Array
       && control.every((message): boolean => typeof message === 'string')
-      );
+    );
   }
 }

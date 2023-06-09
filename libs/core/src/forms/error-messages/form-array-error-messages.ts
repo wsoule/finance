@@ -6,10 +6,10 @@ export interface FormArrayErrorMessages<T> extends FormControlErrorMessages {
   children?: FormErrorMessages<T[keyof(T)]>[];
 }
 
-export module FormArrayErrorMessages {
+export namespace FormArrayErrorMessages {
   export function isInstance<T extends any[] = unknown[]>(
     validation: any
-    ): validation is FormArrayErrorMessages<T> {
+  ): validation is FormArrayErrorMessages<T> {
     if (!FormControlErrorMessages.isInstance(validation)) {
       return false;
     }
@@ -19,6 +19,6 @@ export module FormArrayErrorMessages {
     return children == null || (
       children instanceof Array
       && children.every((child): boolean => FormControlErrorMessages.isInstance(child))
-      );
+    );
   }
 }

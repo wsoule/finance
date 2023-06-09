@@ -7,7 +7,7 @@ import {
   FormControlErrorMessages,
   FormErrorMessages,
   FormGroupErrorMessages
-} from '../../forms'
+} from '@finance/core';
 import { isFormError } from './is-form-error';
 
 export function handleFormErrorMessages(
@@ -19,7 +19,7 @@ export function handleFormErrorMessages(
     if (!isFormError(graphQlError)) {
       return;
     }
-
+    
     const formErrors = graphQlError.extensions.formControlError;
 
     if ((formErrors as FormArrayErrorMessages<any> | FormGroupErrorMessages<any>).children) {
@@ -43,7 +43,7 @@ export function mapErrorMessages<T>(errors: FormErrorMessages<T>): FormikErrors<
     return Object.entries(errors.children).reduce((formErrors, [key, control]): FormikErrors<T> => {
       formErrors[key as keyof(T)] = mapErrorMessages(control) as any;
       return formErrors;
-    }, {} as FormikErrors<T>);
+    }, {} satisfies FormikErrors<T>);
   } else if (FormArrayErrorMessages.isInstance<any[]>(errors) && errors.children) {
     return errors.children.map((child) => mapErrorMessages(child)) as any;
   } else if (FormControlErrorMessages.isInstance(errors) && errors.control) {

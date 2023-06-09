@@ -7,7 +7,7 @@ import {
   FormControlErrorMessages,
   FormErrorMessages,
   FormGroupErrorMessages
-} from '../../forms';
+} from '@finance/core';
 import { isFormError } from './is-form-error';
 
 export function toastFormControlError(
@@ -18,10 +18,10 @@ export function toastFormControlError(
 ): boolean {
   let controlErrors: FormErrorMessages<any> | null = null;
   result.error?.graphQLErrors.map((graphQlError): void => {
-    let toastConfig: Partial<UseToastOptions> | null = null;
+    const _toastConfig: Partial<UseToastOptions> | null = null;
     if (isFormError(graphQlError)) {
       const formErrors = graphQlError.extensions.formControlError as FormGroupErrorMessages<any>;
-      controlErrors = formErrors.children && formErrors.children[controlName] || null;
+      controlErrors = (formErrors.children && formErrors.children[controlName]) || null;
       if (controlErrors) {
         toast({
           description: controlErrors?.control?.join('\t\n'),
