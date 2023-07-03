@@ -1,4 +1,4 @@
-import { Field, ObjectType } from 'type-graphql';
+import { Ctx, Field, ObjectType } from 'type-graphql';
 import {
   BaseEntity,
   Column,
@@ -45,4 +45,11 @@ export class User extends BaseEntity {
   })
   @Field()
   username!: string;
+
+   @Field(() => String, { name: 'email', nullable: true })
+  emailField(
+    @Ctx() { request }: AppContext
+  ): string | null {
+    return (request.session.userId === this.id) ? this.email : null;
+  }
 }

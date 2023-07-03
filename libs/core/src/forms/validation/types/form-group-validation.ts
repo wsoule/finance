@@ -13,6 +13,7 @@ export namespace FormGroupValidation {
     if (!FormControlValidation.isInstance(validation)) {
       return false;
     }
+
     const children = (validation as FormArrayValidation<any> | FormGroupValidation<T> | null)?.children;
 
     return children == null || (

@@ -1,4 +1,4 @@
-import { FormControlValidation } from './form-control.validation';
+import { FormControlValidation } from './form-control-validation';
 import { FormGroupValidation} from './form-group-validation';
 import { FormValidation } from './form-validation';
 

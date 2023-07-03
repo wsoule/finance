@@ -15,6 +15,7 @@ import {
  } from './types';
  import { environment } from '../environments';
 import { FindOptionsWhere } from 'typeorm';
+import { FormError } from '@finance/node';
 
 @Resolver()
 export class UserResolver {
