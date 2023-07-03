@@ -1,7 +1,7 @@
 import { Field, InputType } from 'type-graphql';
 import { extendValidation, ControlValidators, FormGroupValidation } from '@finance/core';
 
-import { InputBase } from './input-base';
+import { InputBase } from '@finance/node';
 import { passwordValidation } from './validation';
 
 @InputType()
