@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
+import { AppContext } from '../types';
 
 @Entity()
 @ObjectType()
@@ -18,7 +19,6 @@ export class User extends BaseEntity {
 
   /** Email for communicating with the user. */
   @Column({
-    length: 255,
     unique: true
   })
   @Field()

@@ -38,7 +38,7 @@ export function runValidation<T>(validation: FormValidation<T>, value: T): FormE
       childrenErrors,
       [childKey, childControl]
     ) => {
-      const childErrors = runValidation(childControl, value[childKey]);
+      const childErrors = runValidation(childControl, value![childKey]);
       if (childErrors != null) {
         childrenErrors![childKey] = childErrors;
       }
