@@ -3,7 +3,7 @@ import { FormErrorMessages } from './form-error-messages';
 import { FormGroupErrorMessages } from './form-group-error-messages';
 
 export interface FormArrayErrorMessages<T> extends FormControlErrorMessages {
-  children?: FormErrorMessages<T[keyof(T)]>[];
+  children?: (FormErrorMessages<T[keyof(T)]>[] | null);
 }
 
 export namespace FormArrayErrorMessages {

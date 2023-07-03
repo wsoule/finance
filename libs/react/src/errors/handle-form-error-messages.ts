@@ -16,6 +16,7 @@ export function handleFormErrorMessages(
   toast: ReturnType<typeof useToast>
 ): boolean {
   result.error?.graphQLErrors.map((graphQlError): void => {
+    console.log(graphQlError);
     if (!isFormError(graphQlError)) {
       return;
     }
@@ -26,7 +27,6 @@ export function handleFormErrorMessages(
       setErrors(mapErrorMessages(formErrors) as FormikErrors<any>);
       return;
     }
-
     toast({
       description: (formErrors.control) ? formErrors.control.join('\t\n') : null,
       isClosable: true,
@@ -43,7 +43,7 @@ export function mapErrorMessages<T>(errors: FormErrorMessages<T>): FormikErrors<
     return Object.entries(errors.children).reduce((formErrors, [key, control]): FormikErrors<T> => {
       formErrors[key as keyof(T)] = mapErrorMessages(control) as any;
       return formErrors;
-    }, {} satisfies FormikErrors<T>);
+    }, {} as FormikErrors<T>);
   } else if (FormArrayErrorMessages.isInstance<any[]>(errors) && errors.children) {
     return errors.children.map((child) => mapErrorMessages(child)) as any;
   } else if (FormControlErrorMessages.isInstance(errors) && errors.control) {

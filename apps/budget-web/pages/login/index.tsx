@@ -15,31 +15,15 @@ export const LoginPage: FC = () => {
   const [, userLogin] = useUserLoginMutation();
   const [disable, setDisable] = useState(true);
 
-  const validateForm = (values: LoginFormValues): Partial<LoginFormValues> => {
-    const errors: Partial<LoginFormValues> = {};
 
-    if (!values.username) {
-      errors.username = 'Username is required';
-    }
-    if (!values.password) {
-      errors.password = 'Password is required';
-    }
-    if (!errors.username && !errors.password){
-      setDisable(false);
-    } else {
-      setDisable(true);
-    }
-    return errors;
-  };
 
   return (
     <Formik
       initialValues={{ password: '', username: ''}}
-      validate={validateForm}
       onSubmit={async (values, { setErrors }): Promise<void> => {
         const response = await userLogin({ input: values });
+        console.log('response:', response, 'setErrors', setErrors);
         handleFormErrorMessages(response, setErrors, toast);
-        console.log(response);
       }}
     >{({ isSubmitting }): JSX.Element => (
         <Form className='spaced-rows'>

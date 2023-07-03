@@ -83,7 +83,7 @@ export class UserResolver {
     ]});
 
     if (!existingUser || !await argon2.verify(existingUser.password, password)) {
-      throw new BaseError(
+      throw new FormError(
         'Invalid username or password',
         ErrorCode.badUserInput
       );
