@@ -1,14 +1,16 @@
 import { GraphQLError } from 'graphql';
 
-export class BaseError extends GraphQLError {
-  statusCode: number;
+export enum ErrorCode {
+  authenticationError = 'AUTHENTICATION_ERROR',
+  formError = 'FORM_ERROR'
+}
 
+export class BaseError extends GraphQLError {
   constructor(
     message: string,
-    httpStatusCode: number,
+    code: ErrorCode,
     extensions?: Record<string, any>
   ) {
-    super(message, extensions);
-    this.statusCode = httpStatusCode;
+    super(message, { extensions: { code, ...extensions } });
   }
 }

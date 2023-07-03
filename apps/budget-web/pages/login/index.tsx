@@ -1,6 +1,6 @@
 import { useToast, Button, Stack } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import { useUserLoginMutation } from '../../generated/graphql';
 import { InputField, Link, handleFormErrorMessages } from '@finance/react';
@@ -13,9 +13,6 @@ export interface LoginFormValues {
 export const LoginPage: FC = () => {
   const toast = useToast();
   const [, userLogin] = useUserLoginMutation();
-  const [disable, setDisable] = useState(true);
-
-
 
   return (
     <Formik
@@ -33,7 +30,7 @@ export const LoginPage: FC = () => {
             <Link label='Go Home' route='/' />
           </Stack>
           <Stack direction='row' justifyContent='end' spacing='1rem'>
-            <Button isLoading={isSubmitting} isDisabled={disable}
+            <Button isLoading={isSubmitting}
               type='submit'>
           submit
             </Button>

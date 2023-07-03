@@ -17,7 +17,7 @@ import {
   UserLoginInput
  } from './types';
  import { environment } from '../environments';
-import { FormError, sendEmail, Time } from '@finance/node';
+import { ErrorCode, FormError, sendEmail, Time, BaseError} from '@finance/node';
 import { UserChangePasswordInput } from './types/user-change-password-input';
 import { UserChangePasswordTokenCheckInput } from './types/user-change-password-token-check-input';
 
