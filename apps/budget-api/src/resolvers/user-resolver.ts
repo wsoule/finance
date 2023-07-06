@@ -17,7 +17,7 @@ import {
   UserLoginInput
  } from './types';
  import { environment } from '../environments';
-import { ErrorCode, FormError, sendEmail, Time, BaseError} from '@finance/node';
+import { FormError, sendEmail, Time } from '@finance/node';
 import { UserChangePasswordInput } from './types/user-change-password-input';
 import { UserChangePasswordTokenCheckInput } from './types/user-change-password-token-check-input';
 
@@ -97,17 +97,6 @@ export class UserResolver {
 
     return user;
   }
-
-  // @Query(() => User, { nullable: true })
-  // async userDetails(
-  //   @Ctx() { request }: AppContext
-  //   ): Promise<User | null> {
-  //   const userId = request.session.userId;
-
-  //   return (userId)
-  //     ? await User.findOne({ where: { id: userId } })
-  //     : null;
-  // }
 
   @Mutation(() => Boolean)
   async userForgotPassword(
