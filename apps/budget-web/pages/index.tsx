@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Button} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { Page } from '../components/page';
+import { Page } from '../components';
 
 export const Index: FC = () => {
   const router = useRouter();

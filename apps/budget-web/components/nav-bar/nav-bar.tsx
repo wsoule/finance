@@ -1,8 +1,10 @@
 import { Button } from '@chakra-ui/button';
-import { SettingsIcon } from '@chakra-ui/icons';
+import { MoonIcon, SettingsIcon, SunIcon } from '@chakra-ui/icons';
 import { Center, Divider, Heading, Stack } from '@chakra-ui/layout';
 import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu';
 import { useToast } from '@chakra-ui/toast';
+import { useColorMode } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import { FC } from 'react';
 
 import { Link, wrapperSizeToPixels, WrapperPropsSize } from '@finance/react';
@@ -14,11 +16,19 @@ export interface NavBarProps {
 }
 
 export const NavBar: FC<NavBarProps> = ({ size }) => {
+  const { colorMode, toggleColorMode } = useColorMode();
+  const router = useRouter();
+  const toast = useToast();
   const [ { fetching: logoutFetching }, logout ] = useUserLogoutMutation();
   const [ { data, fetching: useDetailsFetching } ] = useUserDetailsQuery();
-  const toast = useToast();
   const { username } = data?.userDetails ?? {};
-
+  const themeChange: JSX.Element = (
+    <>
+      <Button onClick={toggleColorMode} rounded='25%'>
+        {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+      </Button>
+    </>
+  );
   let profileMenuList: JSX.Element | null = null;
   if (useDetailsFetching) {
     profileMenuList = <MenuList>
@@ -26,15 +36,14 @@ export const NavBar: FC<NavBarProps> = ({ size }) => {
     </MenuList>;
   } else if (!username) {
     profileMenuList = <MenuList>
-      <MenuItem>
-        <Link label='Log In' padding='0.5em' route='/login' variant='ghost'>
-         Log In
-        </Link>
+      <MenuItem as='a' href='/login'>
+        Log in
+      </MenuItem>
+      <MenuItem as='a' href='/register'>
+        Register
       </MenuItem>
       <MenuItem>
-        <Link label='Register' padding='0.5em' route='/register' variant='ghost'>
-         Register
-        </Link>
+        {themeChange}
       </MenuItem>
     </MenuList>;
   } else {
@@ -44,9 +53,13 @@ export const NavBar: FC<NavBarProps> = ({ size }) => {
         onClick={async (): Promise<void> => {
           await logout({});
           toast({ status: 'success', title: 'Logged out' });
+          router.reload();
         }}
       >
       Log out
+      </MenuItem>
+      <MenuItem>
+        {themeChange}
       </MenuItem>
     </MenuList>;
   }
