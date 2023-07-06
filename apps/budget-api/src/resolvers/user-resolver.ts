@@ -13,7 +13,6 @@ import { User } from '../entities';
 import { AppContext, RedisKey } from '../types';
 import {
   UserCreateInput,
-  UserDetailsInput,
   UserLoginInput
  } from './types';
  import { environment } from '../environments';
@@ -98,6 +97,22 @@ export class UserResolver {
     return user;
   }
 
+  @Query(() => User, { nullable: true })
+  async userDetails(
+    @Ctx() { request }: AppContext
+  ): Promise<User | null> {
+    const { userId } = request.session;
+
+    let where: FindOptionsWhere<User>| null = null;
+
+    if (userId) {
+      where = { id: userId };
+    }
+
+    return (!where) ? null : User.findOne({ where });
+
+  }
+
   @Mutation(() => Boolean)
   async userForgotPassword(
     @Arg('input') input: string,
@@ -159,27 +174,6 @@ export class UserResolver {
     });
   });
  }
-
-  @Query(() => User, { nullable: true })
-  async userDetails(
-    @Arg('input', () => UserDetailsInput, { nullable: true })
-    input: UserDetailsInput | null,
-    @Ctx() { request }: AppContext
-  ): Promise<User | null> {
-    const { username } = input ?? {};
-    const { userId } = request.session;
-
-    let where: FindOptionsWhere<User>| null = null;
-
-    if (username) {
-      where = { username }; //shorthand for { username: username }
-    } else if (userId) {
-      where = { id: userId };
-    }
-
-    return (!where) ? null : User.findOne({ where });
-
-  }
 
   /** Get the user for the provided token if the token and user exist. */
   protected async getUserFromChangePasswordToken(token: string, redis: AppContext['redis']): Promise<User | null> {

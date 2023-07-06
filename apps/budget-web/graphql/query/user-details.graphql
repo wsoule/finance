@@ -1,5 +1,5 @@
-query userDetails($input: UserDetailsInput!) {
-  userDetails(input: $input) {
+query UserDetails {
+  userDetails {
     ...UserDetails
   }
 }

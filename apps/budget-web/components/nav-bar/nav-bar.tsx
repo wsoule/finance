@@ -6,7 +6,7 @@ import { useToast } from '@chakra-ui/toast';
 import { FC } from 'react';
 
 import { Link, wrapperSizeToPixels, WrapperPropsSize } from '@finance/react';
-import { useUserDetailsQuery, useUserLoginMutation } from '../../generated/graphql';
+import { useUserDetailsQuery, useUserLogoutMutation } from '../../generated/graphql';
 import styles from './nav-bar.module.scss';
 
 export interface NavBarProps {
@@ -14,8 +14,7 @@ export interface NavBarProps {
 }
 
 export const NavBar: FC<NavBarProps> = ({ size }) => {
-  // need to create a userlogout mutation in graphql 
-  const [ { fetching: logoutFetching }, logout ] = useUserLogout();
+  const [ { fetching: logoutFetching }, logout ] = useUserLogoutMutation();
   const [ { data, fetching: useDetailsFetching } ] = useUserDetailsQuery();
   const toast = useToast();
   const { username } = data?.userDetails ?? {};
@@ -43,7 +42,7 @@ export const NavBar: FC<NavBarProps> = ({ size }) => {
       <Center>Hello {username},</Center>
       <MenuItem
         onClick={async (): Promise<void> => {
-          await logout();
+          await logout({});
           toast({ status: 'success', title: 'Logged out' });
         }}
       >
@@ -52,28 +51,30 @@ export const NavBar: FC<NavBarProps> = ({ size }) => {
     </MenuList>;
   }
 
-  return <Stack alignItems='center' paddingX='2em' paddingY='0.5em'>
-    <Stack
-      direction='row'
-      justifyContent='space-between'
-      marginY='auto'
-      maxWidth={`${wrapperSizeToPixels(size)}`}
-      width='100%'
-    >
-      <Stack direction='row'>
-        <Link label='Budget Home' route='/' style={{ textDecoration: 'none'}}>
-          <Heading>Budget</Heading>
-        </Link>
-      </Stack>
-      <Stack direction='row' spacing='0.5em'>
-        <Menu>
-          <MenuButton as={Button} leftIcon={<SettingsIcon />} variant='ghost'>
+  return (
+    <Stack alignItems='center' paddingX='2em' paddingY='0.5em'>
+      <Stack
+        direction='row'
+        justifyContent='space-between'
+        marginY='auto'
+        maxWidth={`${wrapperSizeToPixels(size)}`}
+        width='100%'
+      >
+        <Stack direction='row'>
+          <Link label='Budget Home' route='/' style={{ textDecoration: 'none'}}>
+            <Heading>Budget</Heading>
+          </Link>
+        </Stack>
+        <Stack direction='row' spacing='0.5em'>
+          <Menu>
+            <MenuButton as={Button} leftIcon={<SettingsIcon />} variant='ghost'>
         Profile
-          </MenuButton>
-          {profileMenuList}
-        </Menu>
+            </MenuButton>
+            {profileMenuList}
+          </Menu>
+        </Stack>
       </Stack>
+      <Divider />
     </Stack>
-    <Divider />
-  </Stack>;
+  );
 };
