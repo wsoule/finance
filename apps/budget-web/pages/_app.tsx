@@ -1,22 +1,16 @@
 import { AppProps } from 'next/app';
 import {
-  Client as UrqlClient,
-  Provider as UrlqlProvider,
-  cacheExchange,
-  fetchExchange
+  Provider as UrlqlProvider
 } from 'urql';
-import { environment } from '../environments';
 import { ChakraProvider } from '@chakra-ui/react';
 
-const client = new UrqlClient({
-  url: `${environment.apiUrl}/graphql`,
-  exchanges: [cacheExchange, fetchExchange]
-});
+import { createUrqlClient } from '../functions/shared/create-urql-client';
+const urqlClient = createUrqlClient();
 
 export const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <ChakraProvider>
-      <UrlqlProvider value={client}>
+      <UrlqlProvider value={urqlClient}>
         <Component {...pageProps} />
       </UrlqlProvider>
     </ChakraProvider>

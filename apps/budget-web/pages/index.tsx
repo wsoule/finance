@@ -1,37 +1,21 @@
-import { FC, MouseEventHandler, useState } from 'react';
-import { useUserDetailsQuery, useUserLoginMutation } from '../generated/graphql';
-import { Button, ChakraProvider} from '@chakra-ui/react';
+import { FC } from 'react';
+import { Button} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
+import { Page } from '../components/page';
 
-export const Page: FC = () => {
+export const Index: FC = () => {
   const router = useRouter();
-  const [search, setSearch] = useState('');
-  const [{ data: userDetails, fetching }] = useUserDetailsQuery({
-    variables: {
-      input: { username : search }
-    }
-  });
-  const [, userLogin] = useUserLoginMutation();
-
-  const onLogin = async (): Promise<void> => {
-    console.log(await userLogin({
-      input: {
-        password: '1234',
-        username: 'user1'
-      }
-    }));
-  };
+  
   const openLogin = (): void => {
     router.push('/login');
   };
   return (
-    <>
+    <Page size='medium' >
       <Button onClick={openLogin}>
           login
       </Button>
-    </>
+    </Page>
   );
 };
 
-export default Page;
+export default Index;

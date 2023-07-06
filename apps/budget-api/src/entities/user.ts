@@ -1,4 +1,4 @@
-import { Field, ObjectType } from 'type-graphql';
+import { Ctx, Field, ObjectType } from 'type-graphql';
 import {
   BaseEntity,
   Column,
@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
+import { AppContext } from '../types';
 
 @Entity()
 @ObjectType()
@@ -18,7 +19,6 @@ export class User extends BaseEntity {
 
   /** Email for communicating with the user. */
   @Column({
-    length: 255,
     unique: true
   })
   @Field()
@@ -45,4 +45,11 @@ export class User extends BaseEntity {
   })
   @Field()
   username!: string;
+
+   @Field(() => String, { name: 'email', nullable: true })
+  emailField(
+    @Ctx() { request }: AppContext
+  ): string | null {
+    return (request.session.userId === this.id) ? this.email : null;
+  }
 }

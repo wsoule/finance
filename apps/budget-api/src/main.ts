@@ -7,7 +7,7 @@ import { default as cors } from 'cors';
 import { default as express, Express } from 'express';
 import { default as expressSession } from 'express-session';
 import { createServer as createHttpServer } from 'http';
-import { default as IoRedis } from 'ioredis';
+import { default as IoRedis, Redis } from 'ioredis';
 import { join as pathJoin } from 'path';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
@@ -18,7 +18,8 @@ import { resolvers } from './resolvers';
 import { AppContext } from './types';
 
 async function addGraphQLMiddleware(
-  app: Express
+  app: Express,
+  redisClient: Redis
 ): Promise<void> {
   const httpServer = createHttpServer(app);
   const graphQlServer = new ApolloServer({
@@ -38,6 +39,7 @@ async function addGraphQLMiddleware(
     expressMiddleware(graphQlServer, {
       context: async ({ req, res }): Promise<AppContext> => {
         return {
+          redis: redisClient,
           request: req,
           response: res
         };
@@ -46,9 +48,11 @@ async function addGraphQLMiddleware(
   );
 }
 
-async function addRedisSessionMiddleware(app: Express): Promise<void> {
+async function addRedisSessionMiddleware(
+  app: Express,
+  client: Redis
+): Promise<void> {
   const dayInMilliseconds = 24 * 60 * 60 * 1000;
-  const client = new IoRedis(); //what is IoRedis
   const { isProd, session } = environment;
 
   app.use(
@@ -93,9 +97,11 @@ async function main(): Promise<void> {
     res.send({ message: 'Welcome to budget-api'});
   });
 
+  const redisClient = new IoRedis();
+
   await Promise.all([
-    addGraphQLMiddleware(app),
-    addRedisSessionMiddleware(app),
+    addGraphQLMiddleware(app, redisClient),
+    addRedisSessionMiddleware(app, redisClient),
     initializeDataSource()
   ]);
 

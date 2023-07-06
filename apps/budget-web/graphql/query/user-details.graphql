@@ -1,6 +1,5 @@
-query userDetails($input: UserDetailsInput!) {
-  userDetails(input: $input) {
+query UserDetails {
+  userDetails {
     ...UserDetails
   }
 }
-# could explain this a little bit and the fragments
