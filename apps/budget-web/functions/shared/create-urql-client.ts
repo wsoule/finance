@@ -51,7 +51,6 @@ export function  createUrqlClient(): Client {
             },
             userLogin: (result, _args, cache, _info) => {
               // Update userDetails when userLogin is called.
-              console.log('did this');
               updateQuery<UserLoginMutation, UserDetailsQuery>(
                 cache,
                 { query: UserDetailsDocument },

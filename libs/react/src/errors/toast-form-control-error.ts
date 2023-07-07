@@ -1,10 +1,7 @@
 import { useToast, UseToastOptions } from '@chakra-ui/toast';
-import { FormikErrors } from 'formik';
 import { OperationResult} from 'urql';
 
 import {
-  FormArrayErrorMessages,
-  FormControlErrorMessages,
   FormErrorMessages,
   FormGroupErrorMessages
 } from '@finance/core';
@@ -17,7 +14,7 @@ export function toastFormControlError(
   controlLabel: string
 ): boolean {
   let controlErrors: FormErrorMessages<any> | null = null;
-  result.error?.graphQLErrors.map((graphQlError): void => {
+  result.error?.graphQLErrors.forEach((graphQlError): void => {
     const _toastConfig: Partial<UseToastOptions> | null = null;
     if (isFormError(graphQlError)) {
       const formErrors = graphQlError.extensions.formControlError as FormGroupErrorMessages<any>;

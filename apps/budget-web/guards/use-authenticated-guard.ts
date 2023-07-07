@@ -9,9 +9,8 @@ export const useAuthenticatedGuard = (): boolean | null => {
   const [ success, setSuccess ] = useState<boolean | null>(null);
   const [ { data, fetching } ] = useUserDetailsQuery();
 
-  const { toast } = createStandaloneToast();
-
   useEffect(() => {
+    const { toast } = createStandaloneToast();
     const newSuccess = (fetching) ? null : data?.userDetails != null;
     if (newSuccess == false) {
       toast({

@@ -26,8 +26,6 @@ export function handleFormErrorMessages(
       setErrors(mapErrorMessages(formErrors) as FormikErrors<any>);
       return;
     }
-
-    console.log('toast error');
     toast({
       description: (formErrors.control) ? formErrors.control.join('\t\n') : null,
       isClosable: true,

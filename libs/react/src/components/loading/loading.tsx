@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from 'react';
-import styles from './loading.module.scss';
+import _styles from './loading.module.scss';
 
 export interface LoadingProps extends PropsWithChildren{
   isLoading: boolean;

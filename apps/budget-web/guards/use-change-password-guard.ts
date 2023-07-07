@@ -10,9 +10,9 @@ export const useChangePasswordGuard = (): boolean | null => {
   const token = router.query.token as string ?? 'abc';
   const [ { data, fetching } ] = useUserChangePasswordTokenCheckQuery({ variables: { input: { token } } });
 
-  const { toast } = createStandaloneToast();
 
   useEffect(() => {
+    const { toast } = createStandaloneToast();
     const newSuccess = (fetching || !router.isReady) ? null : !!data?.userChangePasswordTokenCheck;
     if (newSuccess == false) {
       toast({
@@ -23,7 +23,7 @@ export const useChangePasswordGuard = (): boolean | null => {
       router.push('/forgot-password');
     }
     setSuccess(newSuccess);
-  }, [ data, fetching, router ]);
+  }, [data, fetching, router]);
 
   return success;
 };

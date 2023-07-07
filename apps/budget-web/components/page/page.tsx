@@ -1,9 +1,9 @@
-import styles from './page.module.scss';
+import { FC, PropsWithChildren } from 'react';
 
 import { Loading, Wrapper, WrapperPropsSize } from '@finance/react';
-import { NavBar } from '../nav-bar';
-import { FC, PropsWithChildren } from 'react';
 import { useUserDetailsQuery } from '../../generated/graphql';
+import _styles from './page.module.scss';
+import { NavBar } from '../nav-bar';
 
 export interface PageProps extends PropsWithChildren {
   guards?: (boolean | null)[];

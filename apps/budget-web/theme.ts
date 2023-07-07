@@ -1,10 +1,8 @@
-import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
+import { extendTheme } from '@chakra-ui/react';
+import { overrides } from '@finance/react';
 
-const config: ThemeConfig = {
-  initialColorMode: 'system',
-  useSystemColorMode: false
-};
-
-const theme = extendTheme({ config });
+const theme = extendTheme({
+  overrides
+});
 
 export default theme;
