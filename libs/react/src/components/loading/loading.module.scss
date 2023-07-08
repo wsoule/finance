@@ -1,7 +1,26 @@
-/*
- * Replace this with your own classes
- *
- * e.g.
- * .container {
- * }
-*/
+.container {
+  height: 100vh;
+  position: relative;
+}
+
+.middleContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+.spinner {
+  width: 100%;
+  text-align: center;
+}
+
+.text {
+  margin-top: 2em;
+  text-align: center;
+}

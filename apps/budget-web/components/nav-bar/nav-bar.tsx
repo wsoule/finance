@@ -43,8 +43,11 @@ export const NavBar: FC<NavBarProps> = ({ size }) => {
       <MenuItem
         onClick={async (): Promise<void> => {
           await logout({});
-          toast({ status: 'success', title: 'Logged out' });
           router.refresh();
+          toast({
+            status: 'success',
+            title: 'Logged out'
+          });
         }}
       >
       Log out
