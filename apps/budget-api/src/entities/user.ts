@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
+
 import { AppContext } from '../types';
 
 @Entity()
@@ -46,6 +47,7 @@ export class User extends BaseEntity {
   @Field()
   username!: string;
 
+  /** find only username if calling user is in system */
    @Field(() => String, { name: 'email', nullable: true })
   emailField(
     @Ctx() { request }: AppContext
