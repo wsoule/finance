@@ -81,7 +81,7 @@ export class UserResolver {
     ] });
     if (existingUser) {
       throw new FormError({
-        children: { username: { control: [ 'Username and/ore Email alread exists'] } }
+        children: { username: { control: [ 'Username and/or Email alread exists'] } }
       });
     }
 

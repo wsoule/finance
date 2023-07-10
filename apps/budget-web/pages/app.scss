@@ -1,0 +1,7 @@
+body, html {
+  height: 100%;
+}
+
+.spaced-rows > *:not(:first-child) {
+  margin-top: 1em;
+}

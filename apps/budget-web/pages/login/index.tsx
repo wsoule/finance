@@ -29,20 +29,19 @@ export const LoginPage: FC = () => {
           const response = await userLogin({ input: values });
           console.log('response:', response, 'setErrors', setErrors);
           if (handleFormErrorMessages(response, setErrors, toast)) {
+            router.push('/');
             toast({
               title: 'login success',
               description: 'you have successfully logged in',
               status: 'success',
-              duration: 1000,
+              duration: 3000,
               isClosable: true
             });
-            router.push('/');
           }
         }}
-
       >{({ isSubmitting }): JSX.Element => (
           <Form className='spaced-rows'>
-            <InputField label='Username' name='username' placeholder='username' />
+            <InputField autoFocus label='Username' name='username' placeholder='username' />
             <InputField label='Password' name='password' placeholder='password' type='password' ispassword={true} />
             <Stack direction='row' justifyContent='center' spacing='1rem'>
               <Link label='Need an account?' route='/register' />
