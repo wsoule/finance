@@ -23,9 +23,9 @@ export const Index: FC = () => {
   } else if(!username) {
     mainPageFormat = (
       <>
-        <Heading mb={4}>Welcome to <Text as={'span'} color={'red.500'}>Forward Flames</Text></Heading>
+        <Heading mb={4}>Welcome to <Text as={'span'} color={'red.500'}>FireStarter</Text></Heading>
         <Text size={'lg'}>
-          Manage your FI/RE recourses easily, today with FF
+          Manage your FI/RE recourses easily, today with FireStarter
         </Text>
         <Button size={'lg'} mt={'24px'}  mr={'12px'} onClick={openRegisterPage}>
         Create Account

@@ -65,8 +65,8 @@ export const NavBar: FC<NavBarProps> = ({ size }) => {
         width='100%'
       >
         <Stack direction='row'>
-          <Link label='FF Home' route='/' style={{ textDecoration: 'none'}}>
-            <Heading color={'red.500'}>FF</Heading>
+          <Link label='FireStarter Home' route='/' style={{ textDecoration: 'none'}}>
+            <Heading color={'red.500'}>FireStarter</Heading>
           </Link>
         </Stack>
         <Stack direction='row' spacing='0.5em'>

@@ -32,10 +32,10 @@ export const Wrapper: FC<WrapperProps> = ({ children, size }) => {
   );
 };
 
-export function wrapperSizeToPixels(size: WrapperPropsSize = 'medium'): number | null {
+export function wrapperSizeToPixels(size: WrapperPropsSize = 'medium'): number {
   switch (size) {
     case 'full': {
-      return null;
+      return -1;
     }
     case 'large': {
       return 1000;

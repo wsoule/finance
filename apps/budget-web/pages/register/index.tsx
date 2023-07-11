@@ -26,7 +26,7 @@ export const RegisterPage: FC<RegisterProps> = () => {
     <Page guards={guardResults} size='medium'>
       <Box maxW='45rem'>
         <Heading mb={4}>
-          Welcome to <Text as="span" color={'red.500'}>Forward Flames</Text>
+          Welcome to <Text as="span" color={'red.500'}>FireStarter</Text>
         </Heading>
         <Text mb={4} fontSize='xl'>
         Minimize you FI/RE timeline while maximizing your freedom
