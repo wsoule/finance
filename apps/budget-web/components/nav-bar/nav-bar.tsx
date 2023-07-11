@@ -65,12 +65,12 @@ export const NavBar: FC<NavBarProps> = ({ size }) => {
         width='100%'
       >
         <Stack direction='row'>
-          <Link label='Budget Home' route='/' style={{ textDecoration: 'none'}}>
-            <Heading>Budget</Heading>
+          <Link label='FireStarter Home' route='/' style={{ textDecoration: 'none'}}>
+            <Heading color={'red.500'}>FireStarter</Heading>
           </Link>
         </Stack>
         <Stack direction='row' spacing='0.5em'>
-          <Button onClick={toggleColorMode} rounded='25%'>
+          <Button onClick={toggleColorMode} rounded='25%' variant={'ghost'}>
             {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
           </Button>
           <Menu>
