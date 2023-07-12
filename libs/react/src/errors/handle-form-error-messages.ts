@@ -19,7 +19,7 @@ export function handleFormErrorMessages(
     if (!isFormError(graphQlError)) {
       return;
     }
-
+    
     const formErrors = graphQlError.extensions.formControl;
 
     if ((formErrors as FormArrayErrorMessages<any> | FormGroupErrorMessages<any>).children) {
