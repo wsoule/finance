@@ -49,9 +49,12 @@ export const Index: FC = () => {
   }
 
   return (
-    <Page size='large'>
-      {mainPageFormat}
-    </Page>
+    <>
+      <title>Home</title>
+      <Page size='large'>
+        {mainPageFormat}
+      </Page>
+    </>
   );
 };
 

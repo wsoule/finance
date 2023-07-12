@@ -20,7 +20,7 @@ export const Page: FC<PageProps> = ({
 
   return (
     <Loading isLoading={!areGuardsPassed || fetchingUser}>
-      <NavBar size={size} />
+      <NavBar size={'full'} />
       <Wrapper size={size}>
         {children}
       </Wrapper>

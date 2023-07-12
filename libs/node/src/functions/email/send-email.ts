@@ -1,4 +1,4 @@
-import { createTransport, getTestMessageUrl } from 'nodemailer';
+import { createTransport, getTestMessageUrl, createTestAccount } from 'nodemailer';
 import SMTPTransport = require('nodemailer/lib/smtp-transport');
 
 export interface SendEmailConfig {
@@ -6,18 +6,20 @@ export interface SendEmailConfig {
   html: string;
   subject: string; 
   to: string;
+  text: string;
 }
 
 export async function sendEmail(config: SendEmailConfig): Promise<SMTPTransport.SentMessageInfo> {
-  const port = 587;
+  const account = await createTestAccount();
+
   const transporter = createTransport({
+    host: account.smtp.host,
+    port: account.smtp.port,
+    secure: account.smtp.secure,
     auth: {
-      pass: '',
-      user: ''
-    },
-    host: 'smtp.ethereal.email',
-    port,
-    secure: false
+      user: account.user,
+      pass: account.pass
+    }
   });
 
   const info = await transporter.sendMail(config);

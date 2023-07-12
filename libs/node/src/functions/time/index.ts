@@ -1,6 +1,4 @@
-import { timeConverters } from '..';
-
-export { converters as timeConverters } from './converters';
+import { converters as timeConverters } from '../time/converters';
 
 export namespace Time {
   export const converters = timeConverters;

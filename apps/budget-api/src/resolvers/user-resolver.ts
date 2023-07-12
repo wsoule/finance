@@ -13,6 +13,7 @@ import { User } from '../entities';
 import { AppContext, RedisKey } from '../types';
 import {
   UserCreateInput,
+  UserForgotPasswordInput,
   UserLoginInput
  } from './types';
  import { environment } from '../environments';
@@ -50,7 +51,8 @@ export class UserResolver {
         'Your password has been sucessfully updated!'
         ].join('\n'),
       subject: 'Password Change Complete',
-      to: user.email
+      to: user.email,
+      text: 'test2'
     });
 
     return user;
@@ -115,13 +117,15 @@ export class UserResolver {
 
   @Mutation(() => Boolean)
   async userForgotPassword(
-    @Arg('input') input: string,
+    @Arg('input') input: UserForgotPasswordInput,
     @Ctx() { redis }: AppContext
     ): Promise<true> {
-    const user = await User.findOne({ where: [ { username: input }, { email: input } ]   });
+    input.throwIfInvalid();
+    const { username } = input;
+    const user = await User.findOne({ where: [ { username } ]   });
     if (!user) {
       throw new FormError({
-        children: { input: { control: [ 'Email/Username does not exist'] } }
+        children: { username: { control: [ 'Username does not exist'] } }
       });
     }
 
@@ -134,7 +138,8 @@ export class UserResolver {
         `<a href=https://localhost3333/change-password.${token}">Change Password</a>`
         ].join('\n'),
       subject: 'password Change Request',
-      to: user.email
+      to: user.email,
+      text: 'hello'
     });
 
     return true;
