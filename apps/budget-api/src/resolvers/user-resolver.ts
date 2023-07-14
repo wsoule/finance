@@ -16,7 +16,7 @@ import {
   UserForgotPasswordInput,
   UserLoginInput
  } from './types';
- import { environment } from '../environments';
+import { environment } from '../environments';
 import { FormError, sendEmail, Time } from '@finance/node';
 import { UserChangePasswordInput } from './types/user-change-password-input';
 import { UserChangePasswordTokenCheckInput } from './types/user-change-password-token-check-input';
@@ -130,17 +130,19 @@ export class UserResolver {
     }
 
     const token = v4();
-    await redis.set(`${RedisKey.forgotPassword}:${token}`, user.id, 'EXAT', Time.converters.fromDay(3));
+
+    await redis.set(`${RedisKey.forgotPassword}:${token}`, user.id, 'EX', Time.converters.fromDay(3));
 
     await sendEmail({
       from: 'budget@finance.com',
       html: [
-        `<a href=https://localhost3333/change-password.${token}">Change Password</a>`
+        `<a href="${environment.urls.local}/change-password/${token}">Change Password</a>`
         ].join('\n'),
       subject: 'password Change Request',
       to: user.email,
       text: 'hello'
     });
+    console.log(`${environment.urls.local}/change-password/${token}`);
 
     return true;
   }

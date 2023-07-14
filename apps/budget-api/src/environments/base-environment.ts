@@ -9,7 +9,7 @@ function getEnvVariable(variableName: string): string {
   return value;
 }
 
-type BaseKeys = 'databaseOptions' | 'isProd' | 'session';
+type BaseKeys = 'databaseOptions' | 'isProd' | 'session' | 'urls';
 
 export const baseEnvironment: Pick<Environment, BaseKeys> = {
   databaseOptions: {
@@ -26,6 +26,10 @@ export const baseEnvironment: Pick<Environment, BaseKeys> = {
   session: {
     cookieName: 'session',
     secret: getEnvVariable('EXPRESS_SESSION_SECRET')
+  },
+  urls: {
+    local: 'http://localhost:4200',
+    dev: '',
+    prod: ''
   }
-  // What is this?
 };

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Button, Heading, Stat, StatHelpText, StatLabel, StatNumber, Text} from '@chakra-ui/react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 import { Page } from '../components';
 import { useUserDetailsQuery } from '../generated/graphql';

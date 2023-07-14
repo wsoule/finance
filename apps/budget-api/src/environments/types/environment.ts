@@ -7,4 +7,9 @@ export interface Environment {
     cookieName: string;
     secret: string;
   };
+  urls: {
+    local: string;
+    dev: string;
+    prod: string;
+  };
 }

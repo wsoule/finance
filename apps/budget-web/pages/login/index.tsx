@@ -1,12 +1,13 @@
 import { useToast, Button, Stack } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { FC } from 'react';
+import { useRouter } from 'next/router';
 
 import { useUserLoginMutation } from '../../generated/graphql';
 import { InputField, Link, handleFormErrorMessages } from '@finance/react';
 import { Page } from '../../components/page';
 import { useUnauthenticatedGuard } from '../../guards';
-import { useRouter } from 'next/navigation';
+import appStyles from '../app.module.scss';
 
 export interface LoginFormValues {
   username: string;
@@ -42,7 +43,7 @@ export const LoginPage: FC = () => {
             }
           }}
         >{({ isSubmitting }): JSX.Element => (
-            <Form className='spaced-rows'>
+            <Form className={appStyles.spacedRows}>
               <InputField autoFocus label='Username' name='username' placeholder='username' />
               <InputField label='Password' name='password' placeholder='password' type='password' ispassword={true} />
               <Stack direction='row' justifyContent='center' spacing='1rem'>

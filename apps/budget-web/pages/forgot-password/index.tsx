@@ -1,6 +1,6 @@
 import { Button, Stack, useToast } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { FC } from 'react';
 
 import { Page } from '../../components';
@@ -8,7 +8,7 @@ import { InputField, handleFormErrorMessages } from '@finance/react';
 import { useUserForgotPasswordMutation } from '../../generated/graphql';
 import { useUnauthenticatedGuard } from '../../guards';
 import _styles from './index.module.scss';
-
+import appStyles from '../app.module.scss';
 
 const forgotPasswordGuards = [ useUnauthenticatedGuard ];
 
@@ -17,7 +17,6 @@ export const ForgotPassword: FC = () => {
   const router = useRouter();
   const toast = useToast();
   const guardResults = forgotPasswordGuards.map((guard) => guard());
-
 
   return (
     <Page guards={guardResults} size='medium'>
@@ -36,7 +35,7 @@ export const ForgotPassword: FC = () => {
           }
         }}
       >{({ isSubmitting }): JSX.Element => (
-          <Form className={'spaced-rows'}>
+          <Form className={appStyles.spacedRows}>
             <InputField label='Username' name='username' placeholder='username' />
             <Stack direction={'row'} justifyContent={'end'} spacing={'1rem'}>
               <Button isLoading={isSubmitting} type={'submit'}>Request Password Reseet</Button>
@@ -46,8 +45,6 @@ export const ForgotPassword: FC = () => {
       </Formik>
     </Page>
   );
-
 };
-
 
 export default ForgotPassword;
