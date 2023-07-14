@@ -15,7 +15,7 @@ import { AppContext } from '../types';
 
 @Entity()
 @ObjectType()
-export class Accounts extends BaseEntity {
+export class Account extends BaseEntity {
 
   /** Account Number for the user. */
   @PrimaryGeneratedColumn('increment')

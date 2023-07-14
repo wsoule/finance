@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { Box, Button, Heading, Stack, Text, useToast } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 
@@ -8,7 +8,7 @@ import { Page } from '../../components';
 import { useUnauthenticatedGuard } from '../../guards';
 import { useUserCreateMutation } from '../../generated/graphql';
 import { InputField, Link, handleFormErrorMessages } from '@finance/react';
-
+import appStyles from '../app.module.scss';
 
 /* eslint-disable-next-line */
 export interface RegisterProps {
@@ -49,7 +49,7 @@ export const RegisterPage: FC<RegisterProps> = () => {
             }
           }}
         >{({ isSubmitting }): JSX.Element => (
-            <Form className='spaced-rows'>
+            <Form className={appStyles.spacedRows}>
               <InputField autoFocus label='Username' name='username' />
               <InputField label='Email' name='email' type='email' />
               <InputField label='Password' name='password' type='password' ispassword={true} />

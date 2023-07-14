@@ -1,10 +1,10 @@
 import { User } from './user';
-import { Accounts } from './accounts';
+import { Account } from './account';
 
 export * from './user';
-export * from './accounts';
+export * from './account';
 
 export const entities = [
   User,
-  Accounts
+  Account
 ];

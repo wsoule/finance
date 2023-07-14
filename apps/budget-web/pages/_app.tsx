@@ -5,7 +5,7 @@ import {
 import { ChakraProvider } from '@chakra-ui/react';
 
 import { createUrqlClient } from '../functions/shared/create-urql-client';
-import './app.scss';
+import './app.module.scss';
 
 const urqlClient = createUrqlClient();
 

@@ -4,7 +4,6 @@ import { Center, Divider, Heading, Stack } from '@chakra-ui/layout';
 import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu';
 import { useToast } from '@chakra-ui/toast';
 import { useColorMode } from '@chakra-ui/react';
-import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 
 import { Link, wrapperSizeToPixels, WrapperPropsSize } from '@finance/react';
@@ -17,7 +16,6 @@ export interface NavBarProps {
 
 export const NavBar: FC<NavBarProps> = ({ size }) => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const router = useRouter();
   const toast = useToast();
   const [ { fetching: _logoutFetching }, logout ] = useUserLogoutMutation();
   const [ { data, fetching: useDetailsFetching } ] = useUserDetailsQuery();
@@ -43,7 +41,6 @@ export const NavBar: FC<NavBarProps> = ({ size }) => {
       <MenuItem
         onClick={async (): Promise<void> => {
           await logout({});
-          router.refresh();
           toast({
             status: 'success',
             title: 'Logged out'
