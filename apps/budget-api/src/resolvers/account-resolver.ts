@@ -46,9 +46,7 @@ export class AccountResolver {
     @Ctx() { request }: AppContext
     ): Promise<Account | null> {
     const { userId } = request.session;
-    console.log('userId', userId);
     const existingAccount = await Account.findOne({ where: [ { userId } ] });
-    console.log('after', existingAccount);
 
     if (!existingAccount) {
       throw new FormError({
@@ -56,8 +54,6 @@ export class AccountResolver {
       });
     }
 
-    console.log('existingAccount', existingAccount);
     return existingAccount;
-
   }
 }

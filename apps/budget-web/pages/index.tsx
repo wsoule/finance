@@ -11,7 +11,7 @@ export const Index: FC = () => {
   const [ { data: balanceAmount, fetching: balanceFetching }] = useAccountDetailsQuery();
   const { username } = userData?.userDetails ?? {};
   const { balance } = balanceAmount?.accountDetails ?? {};
-  
+
   const openRegisterPage = (): void => {
     router.push('/register');
   };
@@ -43,7 +43,7 @@ export const Index: FC = () => {
         <Heading mb={4}>Welcome {username}</Heading>
         <Stat borderWidth={'1px'} borderRadius={'lg'} padding={'2'}>
           <StatLabel>Balance</StatLabel>
-          <StatNumber>{balance}</StatNumber>
+          <StatNumber>${balance?.toFixed(2)}</StatNumber>
           <StatHelpText>Last Updated</StatHelpText>
         </Stat>
       </>

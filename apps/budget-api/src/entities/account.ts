@@ -34,12 +34,12 @@ export class Account extends BaseEntity {
 
   /** date when the account is created. */
   @CreateDateColumn()
-  @Field(() => String)
+  @Field(() => Date)
   createdAt!: Date;
 
   /** date when account was last updated. */
   @UpdateDateColumn()
-  @Field(() => String)
+  @Field(() => Date)
   updatedAt!: Date;
 
   /** gets the users balance if they have the correct ID. */
