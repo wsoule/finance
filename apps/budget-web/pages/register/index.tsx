@@ -37,8 +37,9 @@ export const RegisterPage: FC<RegisterProps> = () => {
         <Formik
           initialValues={{ password: '', username: '', email: '' }}
           onSubmit={async (values, { setErrors }): Promise<void> => {
-            const response = await userCreate({ input: values });
-            if (handleFormErrorMessages(response, setErrors, toast)) {
+            const userCreateResponse = await userCreate({ input: values });
+
+            if (handleFormErrorMessages(userCreateResponse, setErrors, toast)) {
               router.push('/');
               toast({
                 title: 'User Creation Success',

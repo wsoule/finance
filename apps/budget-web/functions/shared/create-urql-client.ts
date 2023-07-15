@@ -17,6 +17,7 @@ import {
   UserLoginMutation,
   UserLogoutMutation
 } from '../../generated/graphql';
+import { authenticationErrorExchange } from '../exchanges/authentication-error-exchange';
 
 function updateQuery<ResultT, QueryT>(
   cache: Cache,
@@ -77,7 +78,11 @@ export function  createUrqlClient(): Client {
           }
         }
       }),
+      authenticationErrorExchange,
       fetchExchange
-    ]
+    ],
+    fetchOptions: {
+      credentials: 'include' as const
+    }
   });
 }
