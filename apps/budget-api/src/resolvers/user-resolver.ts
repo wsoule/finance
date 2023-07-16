@@ -9,17 +9,18 @@ import {
 import { v4 } from 'uuid';
 import { FindOptionsWhere } from 'typeorm';
 
-import { User } from '../entities';
+import { Account, User } from '../entities';
 import { AppContext, RedisKey } from '../types';
 import {
   UserCreateInput,
   UserForgotPasswordInput,
-  UserLoginInput
+  UserLoginInput,
+  UserChangePasswordInput,
+  UserChangePasswordTokenCheckInput
  } from './types';
 import { environment } from '../environments';
 import { FormError, sendEmail, Time } from '@finance/node';
-import { UserChangePasswordInput } from './types/user-change-password-input';
-import { UserChangePasswordTokenCheckInput } from './types/user-change-password-token-check-input';
+import { AccountResolver } from './account-resolver';
 
 @Resolver()
 export class UserResolver {
@@ -33,7 +34,13 @@ export class UserResolver {
     const user = await this.getUserFromChangePasswordToken(token, redis);
     if (!user) {
       throw new FormError({
-        children: { token: { control: [ 'Invalid token, please request to change your password again.'] } }
+        children: {
+          token: {
+            control: [
+              'Invalid token, please request to change your password again.'
+            ]
+          }
+        }
       });
     }
 
@@ -49,7 +56,7 @@ export class UserResolver {
       from: 'budget@finance.com',
       html: [
         'Your password has been sucessfully updated!'
-        ].join('\n'),
+      ].join('\n'),
       subject: 'Password Change Complete',
       to: user.email,
       text: 'test2'
@@ -70,7 +77,7 @@ export class UserResolver {
   @Mutation(() => User)
   async userCreate(
     @Arg('input') input: UserCreateInput,
-    @Ctx() { request }: AppContext
+    @Ctx() { request, redis, response }: AppContext
   ): Promise<User> {
     input.throwIfInvalid();
     const { email, password, username } = input;
@@ -83,7 +90,13 @@ export class UserResolver {
     ] });
     if (existingUser) {
       throw new FormError({
-        children: { username: { control: [ 'Username and/or Email alread exists'] } }
+        children: {
+          username: {
+            control: [
+            'Username and/or Email alread exists'
+            ]
+          }
+        }
       });
     }
 
@@ -95,6 +108,9 @@ export class UserResolver {
     await user.save();
 
     request.session.userId = user.id;
+
+    const account = new AccountResolver();
+    account.accountCreate({ request, redis, response });
 
     return user;
   }
@@ -112,7 +128,6 @@ export class UserResolver {
     }
 
     return (!where) ? null : User.findOne({ where });
-
   }
 
   @Mutation(() => Boolean)
@@ -125,19 +140,30 @@ export class UserResolver {
     const user = await User.findOne({ where: [ { username } ]   });
     if (!user) {
       throw new FormError({
-        children: { username: { control: [ 'Username does not exist'] } }
+        children: {
+          username: {
+            control: [
+            'Username does not exist'
+            ]
+          }
+        }
       });
     }
 
     const token = v4();
 
-    await redis.set(`${RedisKey.forgotPassword}:${token}`, user.id, 'EX', Time.converters.fromDay(3));
+    await redis.set(
+      `${RedisKey.forgotPassword}:${token}`,
+      user.id,
+      'EX',
+      Time.converters.fromDay(3)
+    );
 
     await sendEmail({
       from: 'budget@finance.com',
       html: [
         `<a href="${environment.urls.local}/change-password/${token}">Change Password</a>`
-        ].join('\n'),
+      ].join('\n'),
       subject: 'password Change Request',
       to: user.email,
       text: 'hello'
@@ -176,7 +202,6 @@ export class UserResolver {
       if (error) {
         console.warn('error', error);
       }
-
       resolve(!error);
     });
   });

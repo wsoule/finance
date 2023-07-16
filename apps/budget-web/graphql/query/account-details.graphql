@@ -1,0 +1,6 @@
+query AccountDetails {
+  accountDetails {
+    updatedAt
+    ...AccountDetails
+  }
+}

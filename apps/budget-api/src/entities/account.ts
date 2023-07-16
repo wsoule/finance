@@ -4,7 +4,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
@@ -18,15 +17,15 @@ import { AppContext } from '../types';
 export class Account extends BaseEntity {
 
   /** Account Number for the user. */
-  @PrimaryGeneratedColumn('increment')
-  accountNumber!: number;
+  @PrimaryGeneratedColumn('uuid')
+  @Field()
+  accountId!: string;
   
   /** ID of the entity. */
   @Column()
   @OneToOne(() => User)
-  @JoinColumn({ name: 'id'})
   @Field()
-  id!: string;
+  userId!: string;
 
   /** balance of a user's account. */
   @Column()
@@ -34,19 +33,19 @@ export class Account extends BaseEntity {
 
   /** date when the account is created. */
   @CreateDateColumn()
-  @Field(() => String)
+  @Field(() => Number)
   createdAt!: Date;
 
   /** date when account was last updated. */
   @UpdateDateColumn()
-  @Field(() => String)
+  @Field(() => Number)
   updatedAt!: Date;
 
   /** gets the users balance if they have the correct ID. */
-  @Field(() => Number, { name: 'id', nullable: true })
+  @Field(() => Number, { name: 'balance' })
   balanceField(
     @Ctx() { request }: AppContext
-    ): number | null {
-    return (request.session.userId === this.id) ? this.balance : null;
+    ): number {
+    return (request.session.userId === this.userId) ? this.balance : 0;
   }
 }

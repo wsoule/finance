@@ -87,7 +87,10 @@ async function initializeDataSource(): Promise<void> {
 async function main(): Promise<void> {
   const app = express();
 
-  app.use(cors());
+  app.use(cors({
+    credentials: true,
+    origin: environment.urls.local
+  }));
 
   app.use(bodyParser.json());
 

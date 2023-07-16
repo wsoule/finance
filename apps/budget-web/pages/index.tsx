@@ -3,13 +3,17 @@ import { Button, Heading, Stat, StatHelpText, StatLabel, StatNumber, Text} from 
 import { useRouter } from 'next/router';
 
 import { Page } from '../components';
-import { useUserDetailsQuery } from '../generated/graphql';
+import { useAccountDetailsQuery, useUserDetailsQuery } from '../generated/graphql';
 
 export const Index: FC = () => {
   const router = useRouter();
-  const [ { data, fetching: userDetailsFetching }] = useUserDetailsQuery();
-  const { username } = data?.userDetails ?? {};
-  
+  const [ { data: userData, fetching: userDetailsFetching }] = useUserDetailsQuery();
+  const [ { data: balanceAmount, fetching: balanceFetching }] = useAccountDetailsQuery();
+  const { username } = userData?.userDetails ?? {};
+  const { balance, updatedAt } = balanceAmount?.accountDetails ?? {};
+
+  const updatedAtToDate = new Date(updatedAt || 0).toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'short', day:'2-digit', hour: '2-digit', minute:'2-digit'});
+
   const openRegisterPage = (): void => {
     router.push('/register');
   };
@@ -18,7 +22,7 @@ export const Index: FC = () => {
   };
 
   let mainPageFormat: JSX.Element | null;
-  if (userDetailsFetching) {
+  if (userDetailsFetching || balanceFetching) {
     mainPageFormat = <Heading>Loading...</Heading>;
   } else if(!username) {
     mainPageFormat = (
@@ -41,8 +45,9 @@ export const Index: FC = () => {
         <Heading mb={4}>Welcome {username}</Heading>
         <Stat borderWidth={'1px'} borderRadius={'lg'} padding={'2'}>
           <StatLabel>Balance</StatLabel>
-          <StatNumber>$0.00</StatNumber>
-          <StatHelpText>Last Updated</StatHelpText>
+          <StatNumber>${balance?.toFixed(2)}</StatNumber>
+          <StatLabel>Last Updated</StatLabel>
+          <StatHelpText>{updatedAtToDate}</StatHelpText>
         </Stat>
       </>
     );

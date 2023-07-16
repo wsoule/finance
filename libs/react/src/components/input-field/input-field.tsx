@@ -5,7 +5,6 @@ import { ComponentWithAs } from '@chakra-ui/system';
 import { Textarea, TextareaProps } from '@chakra-ui/textarea';
 import { useField } from 'formik';
 import { Button, InputGroup, InputRightElement } from '@chakra-ui/react';
-import React from 'react';
 import { ViewOffIcon, ViewIcon } from '@chakra-ui/icons';
 
 export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -23,8 +22,6 @@ export interface TextareaFieldProps extends InputHTMLAttributes<HTMLTextAreaElem
   error?: string | null;
 }
 
-
-
 export const InputField: FC<InputFieldProps | TextareaFieldProps> = ({ error, label, size: _, textarea, ...props   }) => {
   const isPassword = (props as InputFieldProps).ispassword;
   const [ field, { touched, error: fieldError } ] = useField(props);
@@ -34,7 +31,6 @@ export const InputField: FC<InputFieldProps | TextareaFieldProps> = ({ error, la
   const handleShowPassword = (): void => {
     setShowPassword(!showPassword);
   };
-
 
   return (
     <FormControl isInvalid={!!fieldError && touched}>
