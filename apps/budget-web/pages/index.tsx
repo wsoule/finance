@@ -10,7 +10,9 @@ export const Index: FC = () => {
   const [ { data: userData, fetching: userDetailsFetching }] = useUserDetailsQuery();
   const [ { data: balanceAmount, fetching: balanceFetching }] = useAccountDetailsQuery();
   const { username } = userData?.userDetails ?? {};
-  const { balance } = balanceAmount?.accountDetails ?? {};
+  const { balance, updatedAt } = balanceAmount?.accountDetails ?? {};
+
+  const updatedAtToDate = new Date(updatedAt || 0).toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'short', day:'2-digit', hour: '2-digit', minute:'2-digit'});
 
   const openRegisterPage = (): void => {
     router.push('/register');
@@ -44,7 +46,8 @@ export const Index: FC = () => {
         <Stat borderWidth={'1px'} borderRadius={'lg'} padding={'2'}>
           <StatLabel>Balance</StatLabel>
           <StatNumber>${balance?.toFixed(2)}</StatNumber>
-          <StatHelpText>Last Updated</StatHelpText>
+          <StatLabel>Last Updated</StatLabel>
+          <StatHelpText>{updatedAtToDate}</StatHelpText>
         </Stat>
       </>
     );
