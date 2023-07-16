@@ -24,7 +24,6 @@ export class Account extends BaseEntity {
   /** ID of the entity. */
   @Column()
   @OneToOne(() => User)
-  // @JoinColumn({ name: 'id'})
   @Field()
   userId!: string;
 
