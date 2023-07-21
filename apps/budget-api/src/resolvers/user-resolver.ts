@@ -9,7 +9,7 @@ import {
 import { v4 } from 'uuid';
 import { FindOptionsWhere } from 'typeorm';
 
-import { Account, User } from '../entities';
+import { User } from '../entities';
 import { AppContext, RedisKey } from '../types';
 import {
   UserCreateInput,

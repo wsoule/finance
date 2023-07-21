@@ -26,8 +26,8 @@ export class User extends BaseEntity {
   email!: string;
 
   /** ID of the entity. */
-  @Field()
   @PrimaryGeneratedColumn('uuid')
+  @Field()
   id!: string;
 
   /** Password for loggin the user in. */
@@ -35,8 +35,8 @@ export class User extends BaseEntity {
   password!: string;
 
   /** When the entity was updated */
-  @Field(() => String)
   @UpdateDateColumn()
+  @Field(() => String)
   updateAt!: Date;
 
   /** Username of the user to display to others. */

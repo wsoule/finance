@@ -19,7 +19,7 @@ export class Account extends BaseEntity {
   /** Account Number for the user. */
   @PrimaryGeneratedColumn('uuid')
   @Field()
-  accountId!: string;
+  id!: string;
   
   /** ID of the entity. */
   @Column()
@@ -28,7 +28,7 @@ export class Account extends BaseEntity {
   userId!: string;
 
   /** balance of a user's account. */
-  @Column()
+  @Column('decimal', { precision: 20, scale: 2 })
   balance!: number;
 
   /** date when the account is created. */
