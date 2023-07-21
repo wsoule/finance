@@ -30,7 +30,6 @@ export const LoginPage: FC = () => {
           initialValues={{ password: '', username: ''}}
           onSubmit={async (values, { setErrors }): Promise<void> => {
             const response = await userLogin({ input: values });
-            console.log('response:', response, 'setErrors', setErrors);
             if (handleFormErrorMessages(response, setErrors, toast)) {
               router.push('/');
               toast({
@@ -45,7 +44,7 @@ export const LoginPage: FC = () => {
         >{({ isSubmitting }): JSX.Element => (
             <Form className={appStyles.spacedRows}>
               <InputField autoFocus label='Username' name='username' placeholder='username' />
-              <InputField label='Password' name='password' placeholder='password' type='password' ispassword={true} />
+              <InputField label='Password' name='password' placeholder='password' type='password' ispassword/>
               <Stack direction='row' justifyContent='center' spacing='1rem'>
                 <Link label='Need an account?' route='/register' />
                 <Link label='Forgot password?' route='/forgot-password' />
