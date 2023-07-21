@@ -53,7 +53,7 @@ export const RegisterPage: FC<RegisterProps> = () => {
             <Form className={appStyles.spacedRows}>
               <InputField autoFocus label='Username' name='username' />
               <InputField label='Email' name='email' type='email' />
-              <InputField label='Password' name='password' type='password' ispassword={true} />
+              <InputField label='Password' name='password' type='password' ispassword />
               <Stack direction='row' justifyContent='center' spacing='1rem'>
                 <Link label='Already have account?' route='/login' />
               </Stack>

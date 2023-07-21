@@ -12,7 +12,7 @@ export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   textarea?: false;
   error?: string | null;
-  ispassword?: boolean;
+  ispassword?: true;
 }
 
 export interface TextareaFieldProps extends InputHTMLAttributes<HTMLTextAreaElement> {
@@ -20,24 +20,35 @@ export interface TextareaFieldProps extends InputHTMLAttributes<HTMLTextAreaElem
   name: string;
   textarea: true;
   error?: string | null;
+  ispassword?: never;
 }
 
-export const InputField: FC<InputFieldProps | TextareaFieldProps> = ({ error, label, size: _, textarea, ...props   }) => {
-  const isPassword = (props as InputFieldProps).ispassword;
+export const InputField: FC<InputFieldProps | TextareaFieldProps> = ({
+  error,
+  label,
+  size: _,
+  textarea,
+  ispassword,
+  ...props
+}) => {
   const [ field, { touched, error: fieldError } ] = useField(props);
-  const [ showPassword, setShowPassword ] = useState(!isPassword);
+  const [ showPassword, setShowPassword ] = useState(!ispassword);
   const Control = ((textarea) ? Textarea : Input) as ComponentWithAs<'input' | 'textarea', InputProps | TextareaProps>;
 
   const handleShowPassword = (): void => {
     setShowPassword(!showPassword);
   };
 
+  if(textarea && ispassword){
+    throw new Error('cannot be a password & text area!');
+  }
+  
   return (
     <FormControl isInvalid={!!fieldError && touched}>
       <FormLabel htmlFor={field.name}>{label}</FormLabel>
       <InputGroup size='md'>
         <Control {...field} {...props} type={(showPassword && !textarea) ? 'text' : 'password'} id={field.name} />
-        { isPassword && (
+        { ispassword && !textarea && (
           <InputRightElement >
             <Button size='sm' onMouseDown={handleShowPassword} onMouseUp={handleShowPassword}>
               {showPassword ? <ViewIcon /> : <ViewOffIcon />}
