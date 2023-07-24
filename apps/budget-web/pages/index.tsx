@@ -3,33 +3,29 @@ import { Button, Heading, Stat, StatHelpText, StatLabel, StatNumber, Text, useTo
 import { useRouter } from 'next/router';
 
 import { Page } from '../components';
-import { useAccountDetailsQuery, useUpdateBalanceMutation, useUserDetailsQuery } from '../generated/graphql';
-import { InputField, handleFormErrorMessages } from '@finance/react';
+import { useAccountDetailsQuery, useAccountUpdateBalanceMutation, useUserDetailsQuery } from '../generated/graphql';
+import { InputField, handleFormErrorMessages, MoneyInput } from '@finance/react';
 import { Form, Formik } from 'formik';
+import { convertToMoney } from '@finance/core';
 
 export const Index: FC = () => {
   const router = useRouter();
   const [ { data: userData, fetching: userDetailsFetching }] = useUserDetailsQuery();
   const [ { data: balanceAmount, fetching: balanceFetching }] = useAccountDetailsQuery();
-  const [ , balanceUpdate ] = useUpdateBalanceMutation();
+  const [ , balanceUpdate ] = useAccountUpdateBalanceMutation();
   const { username, id: userId } = userData?.userDetails ?? {};
   const { balance, updatedAt, id: accountId } = balanceAmount?.accountDetails ?? { balance: 0 };
-  const [ stateBalance, setStateBalance ] = useState<number>(balance);
+  const [ stateBalance, setStateBalance ] = useState<number>(balance ?? 0);
   const [ editBalance, setEditBalance ] = useState(false);
   const toast = useToast();
-
-  const updatedAtString = (updatedAtNumber: number | undefined): string => {
-    return ((updatedAtNumber) ? new Date(updatedAtNumber).toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'short', day:'2-digit', hour: '2-digit', minute:'2-digit'}) : 'no date available');
-  };
-  const [ updatedAtToDate, setUpdatedAtToDate ] = useState(updatedAtString(updatedAt));
-
-  useEffect(() => {
-    setUpdatedAtToDate(updatedAtString(updatedAt));
-  }, [updatedAt]);
 
   useEffect(() => {
     setStateBalance(balance);
   }, [balance]);
+
+  const updatedAtString = (updatedAtNumber: number | undefined): string => {
+    return ((updatedAtNumber) ? new Date(updatedAtNumber).toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'short', day:'2-digit', hour: '2-digit', minute:'2-digit'}) : 'no date available');
+  };
 
   const openRegisterPage = (): void => {
     router.push('/register');
@@ -41,6 +37,11 @@ export const Index: FC = () => {
 
   const handleEditClick = (): void => {
     setEditBalance(!editBalance);
+  };
+
+  const handleAmountChange = (value: number): void => {
+    console.log(value);
+    setStateBalance(value);
   };
 
   let mainPageFormat: JSX.Element | null;
@@ -67,43 +68,36 @@ export const Index: FC = () => {
         <Heading key={userId} mb={4}>Welcome {username}</Heading>
         <Stat borderWidth={'1px'} borderRadius={'lg'} padding={'2'} key={accountId}>
           <StatLabel>Balance</StatLabel>
-          <StatNumber>${stateBalance}</StatNumber>
+          <StatNumber>{convertToMoney(balance)}</StatNumber>
           <StatLabel>Last Updated</StatLabel>
-          <StatHelpText>{updatedAtToDate}</StatHelpText>
+          <StatHelpText>{updatedAtString(updatedAt)}</StatHelpText>
           { !editBalance && (
-            <>
-              <Button onClick={handleEditClick}>Edit</Button>
-
-            </>
-          )
-          }
+            <Button onClick={handleEditClick}>Edit</Button>
+          ) }
           { editBalance && (
             <Formik
-              initialValues={{ balance: stateBalance }}
+              initialValues={{ balance }}
               onSubmit={async (values, { setErrors }): Promise<void> => {
-                values.balance = parseInt(values.balance as unknown as string);
-                setEditBalance(!editBalance);
-                setUpdatedAtToDate(updatedAtString(Date.parse(new Date().toString())));
+                console.log(stateBalance);
+                const valuesBalance = parseFloat(values.balance.toString());
+                values.balance = (Number.isNaN(valuesBalance) ? 0 : valuesBalance);
                 const balanceUpdateResponse = await balanceUpdate({ input: values });
-                if(handleFormErrorMessages(balanceUpdateResponse, setErrors, toast)) {
+                if (handleFormErrorMessages(balanceUpdateResponse, setErrors, toast)) {
                   toast({
                     title: 'Balance Update Success',
-                    description: `balance was updated to ${values.balance}`,
+                    description: `balance was updated to ${convertToMoney(balanceUpdateResponse.data?.accountUpdateBalance.balance ?? values.balance)}`,
                     status: 'success',
                     isClosable: true
                   });
                 }
-              }}
-              onReset={async (values, { setErrors: _ }): Promise<void> => {
-                setStateBalance(values.balance);
                 setEditBalance(!editBalance);
               }}
-            >{({ isSubmitting, handleChange, values }): JSX.Element => (
+              onReset={async (_values, { setErrors: _setErrors }): Promise<void> => {
+                setEditBalance(!editBalance);
+              }}
+            >{({ isSubmitting }): JSX.Element => (
                 <Form>
-                  <InputField name='balance' label='Update Balance:' type='number' value={values.balance} onChange={(e):void => {
-                    setStateBalance(e.target.value as unknown as number );
-                    handleChange(e);
-                  }} />
+                  <MoneyInput name='balance' label='Update balance' value={stateBalance} onValueChange={handleAmountChange}/>
                   <Button isLoading={isSubmitting} type='submit' colorScheme='green'>&#10003;</Button>
                   <Button type='reset' colorScheme='red'>&#10005;</Button>
                 </Form>
@@ -126,3 +120,4 @@ export const Index: FC = () => {
 };
 
 export default Index;
+// <InputField name='balance' label='Update Balance:' type='number' />

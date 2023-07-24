@@ -8,7 +8,7 @@ import { Button, InputGroup, InputRightElement } from '@chakra-ui/react';
 import { ViewOffIcon, ViewIcon } from '@chakra-ui/icons';
 
 export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
+  label?: string;
   name: string;
   textarea?: false;
   error?: string | null;
@@ -16,7 +16,7 @@ export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export interface TextareaFieldProps extends InputHTMLAttributes<HTMLTextAreaElement> {
-  label: string;
+  label?: string;
   name: string;
   textarea: true;
   error?: string | null;
