@@ -9,7 +9,7 @@ import {
 import { Account, User } from '../entities';
 import { AppContext } from '../types';
 import { FormError } from '@finance/node';
-import { AccountUpdateBalance } from './types/account-update-balance-input';
+import { AccountUpdateBalanceInput } from './types/account-update-balance-input';
 
 @Resolver()
 export class AccountResolver {
@@ -60,15 +60,15 @@ export class AccountResolver {
   }
 
 /** updates the users balance with inputed amount. */
-  @Mutation(() => Number)
-  async updateBalance(
-    @Arg('input') input: AccountUpdateBalance,
+  @Mutation(() => Account)
+  async accountUpdateBalance(
+    @Arg('input') input: AccountUpdateBalanceInput,
     @Ctx() { request }: AppContext
-  ): Promise<number> {
+  ): Promise<Account> {
     input.throwIfInvalid();
     const { balance } = input;
     const { userId } = request.session;
-    const account = await Account.findOne({ where: [ { userId } ] });
+    let account = await Account.findOne({ where: [ { userId } ] });
 
     if (!account) {
       throw new FormError({
@@ -81,7 +81,8 @@ export class AccountResolver {
       }, {
         balance
       });
+    account = await Account.findOne({ where: [ { userId } ] }) ?? account;
 
-    return balance;
+    return account;
     }
 }

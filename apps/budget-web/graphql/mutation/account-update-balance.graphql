@@ -1,3 +1,5 @@
-mutation UpdateBalance($input: AccountUpdateBalance!) {
-  updateBalance(input: $input)
+mutation AccountUpdateBalance($input: AccountUpdateBalanceInput!) {
+  accountUpdateBalance(input: $input){
+    ...AccountDetails
+  }
 }
