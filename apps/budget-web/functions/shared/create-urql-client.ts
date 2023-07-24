@@ -11,6 +11,9 @@ import {
 } from 'urql';
 import { environment } from '../../environments';
 import {
+  AccountDetailsDocument,
+  AccountDetailsQuery,
+  AccountUpdateBalanceMutation,
   UserCreateMutation,
   UserDetailsDocument,
   UserDetailsQuery,
@@ -72,6 +75,17 @@ export function  createUrqlClient(): Client {
                 (_logoutResult, _oldUserDetails) => {
                   return {
                     userDetails: null
+                  };
+                });
+            },
+            accountUpdateBalance: (result, _args, cache, _info) => {
+              updateQuery<AccountUpdateBalanceMutation, AccountDetailsQuery>(
+                cache,
+                { query: AccountDetailsDocument },
+                result,
+                (accountBalanceResult, _oldAccountDetails) => {
+                  return {
+                    accountDetails: accountBalanceResult.accountUpdateBalance
                   };
                 });
             }

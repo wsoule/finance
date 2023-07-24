@@ -1,4 +1,5 @@
 import {
+    Arg,
   Ctx,
   Mutation,
   Query,
@@ -8,6 +9,7 @@ import {
 import { Account, User } from '../entities';
 import { AppContext } from '../types';
 import { FormError } from '@finance/node';
+import { AccountUpdateBalanceInput } from './types/account-update-balance-input';
 
 @Resolver()
 export class AccountResolver {
@@ -23,11 +25,11 @@ export class AccountResolver {
 
     if (existingAccount) {
       throw new FormError({
-        control: ['Account Already Created']
+        control: [ 'Account Already Created!' ]
       });
     } else if (!existingUser) {
       throw new FormError({
-        control: [ 'User Not Found' ]
+        control: [ 'User Not Found!' ]
       });
     }
 
@@ -50,10 +52,37 @@ export class AccountResolver {
 
     if (!existingAccount) {
       throw new FormError({
-        control: [ 'Account Not Found' ]
+        control: [ 'Account Not Found!' ]
       });
     }
 
     return existingAccount;
   }
+
+/** updates the users balance with inputed amount. */
+  @Mutation(() => Account)
+  async accountUpdateBalance(
+    @Arg('input') input: AccountUpdateBalanceInput,
+    @Ctx() { request }: AppContext
+  ): Promise<Account> {
+    input.throwIfInvalid();
+    const { balance } = input;
+    const { userId } = request.session;
+    let account = await Account.findOne({ where: [ { userId } ] });
+
+    if (!account) {
+      throw new FormError({
+        control: [ 'Account Not Found!' ]
+      });
+    }
+
+    await Account.update({
+      userId
+      }, {
+        balance
+      });
+    account = await Account.findOne({ where: [ { userId } ] }) ?? account;
+
+    return account;
+    }
 }

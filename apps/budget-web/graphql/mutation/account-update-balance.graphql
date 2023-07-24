@@ -1,0 +1,5 @@
+mutation AccountUpdateBalance($input: AccountUpdateBalanceInput!) {
+  accountUpdateBalance(input: $input){
+    ...AccountDetails
+  }
+}
