@@ -1,14 +1,14 @@
-import { FC, InputHTMLAttributes, useState } from 'react';
 import { FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/form-control';
 import { Input, InputProps } from '@chakra-ui/input';
+import { ViewOffIcon, ViewIcon } from '@chakra-ui/icons';
+import { Button, InputGroup, InputRightElement } from '@chakra-ui/react';
 import { ComponentWithAs } from '@chakra-ui/system';
 import { Textarea, TextareaProps } from '@chakra-ui/textarea';
 import { useField } from 'formik';
-import { Button, InputGroup, InputRightElement } from '@chakra-ui/react';
-import { ViewOffIcon, ViewIcon } from '@chakra-ui/icons';
+import { FC, InputHTMLAttributes, useState } from 'react';
 
 export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
+  label?: string;
   name: string;
   textarea?: false;
   error?: string | null;
@@ -16,7 +16,7 @@ export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export interface TextareaFieldProps extends InputHTMLAttributes<HTMLTextAreaElement> {
-  label: string;
+  label?: string;
   name: string;
   textarea: true;
   error?: string | null;

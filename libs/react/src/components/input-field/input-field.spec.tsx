@@ -1,7 +1,7 @@
+import { Form, Formik } from 'formik';
 import { render } from '@testing-library/react';
 
 import { InputField } from './input-field';
-import { Form, Formik } from 'formik';
 
 describe('InputField', () => {
   it('should render successfully', () => {

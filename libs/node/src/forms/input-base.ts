@@ -9,7 +9,6 @@ import { FormError } from '../errors';
 export abstract class InputBase {
   public throwIfInvalid(): void {
     const errors = this.getErrors();
-
     if (errors != null) {
       throw new FormError(errors);
     }
