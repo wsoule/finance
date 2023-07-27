@@ -25,9 +25,11 @@ export class AccountResolver {
 
     if (existingAccount) {
       throw new FormError({
+        control: [ 'Account Already Created!' ]
       });
     } else if (!existingUser) {
       throw new FormError({
+        control: [ 'User Not Found!' ]
       });
     }
 
