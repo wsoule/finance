@@ -1,23 +1,23 @@
-import { FC, useEffect, useState } from 'react';
 import { Button, Heading, Stat, StatHelpText, StatLabel, StatNumber, Text, useToast} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import { FC, useEffect, useState } from 'react';
 
 import { Page } from '../components';
-import { useAccountDetailsQuery, useAccountUpdateBalanceMutation, useUserDetailsQuery } from '../generated/graphql';
-import { InputField, handleFormErrorMessages, MoneyInput } from '@finance/react';
-import { Form, Formik } from 'formik';
 import { convertToMoney } from '@finance/core';
+import { handleFormErrorMessages, MoneyInput } from '@finance/react';
+import { Form, Formik } from 'formik';
+import { useAccountDetailsQuery, useAccountUpdateBalanceMutation, useUserDetailsQuery } from '../generated/graphql';
 
 export const Index: FC = () => {
-  const router = useRouter();
-  const [ { data: userData, fetching: userDetailsFetching }] = useUserDetailsQuery();
   const [ { data: balanceAmount, fetching: balanceFetching }] = useAccountDetailsQuery();
   const [ , balanceUpdate ] = useAccountUpdateBalanceMutation();
-  const { username, id: userId } = userData?.userDetails ?? {};
+  const [ { data: userData, fetching: userDetailsFetching }] = useUserDetailsQuery();
   const { balance, updatedAt, id: accountId } = balanceAmount?.accountDetails ?? { balance: 0 };
   const [ stateBalance, setStateBalance ] = useState<number>(balance ?? 0);
+  const { username, id: userId } = userData?.userDetails ?? {};
   const [ editBalance, setEditBalance ] = useState(false);
   const toast = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     setStateBalance(balance);
@@ -40,7 +40,6 @@ export const Index: FC = () => {
   };
 
   const handleAmountChange = (value: number): void => {
-    console.log(value);
     setStateBalance(value);
   };
 
@@ -78,14 +77,12 @@ export const Index: FC = () => {
             <Formik
               initialValues={{ balance }}
               onSubmit={async (values, { setErrors }): Promise<void> => {
-                console.log(stateBalance);
-                const valuesBalance = parseFloat(values.balance.toString());
-                values.balance = (Number.isNaN(valuesBalance) ? 0 : valuesBalance);
+                values.balance = (stateBalance);
                 const balanceUpdateResponse = await balanceUpdate({ input: values });
                 if (handleFormErrorMessages(balanceUpdateResponse, setErrors, toast)) {
                   toast({
                     title: 'Balance Update Success',
-                    description: `balance was updated to ${convertToMoney(balanceUpdateResponse.data?.accountUpdateBalance.balance ?? values.balance)}`,
+                    description: `balance was updated to ${convertToMoney(balanceUpdateResponse.data?.accountUpdateBalance.balance ?? values.balance ?? 0)}`,
                     status: 'success',
                     isClosable: true
                   });
@@ -120,4 +117,3 @@ export const Index: FC = () => {
 };
 
 export default Index;
-// <InputField name='balance' label='Update Balance:' type='number' />

@@ -1,13 +1,12 @@
-import { FormControl, FormLabel, Input, InputGroup, InputLeftAddon, InputLeftElement, NumberInput, NumberInputField, useColorMode, useColorModeValue } from '@chakra-ui/react';
-import { ChangeEvent, FC, SetStateAction, useEffect, useRef, useState } from 'react';
-
-import _cssStyles from './money-input.module.scss';
-import { InputFieldProps } from '../input-field';
+import { FormControl, FormErrorMessage, FormLabel, Input, InputGroup, InputLeftElement, useColorModeValue } from '@chakra-ui/react';
 import { useField } from 'formik';
+import { ChangeEvent, FC, useState } from 'react';
+
+import { InputFieldProps } from '../input-field';
+import _cssStyles from './money-input.module.scss';
 
 export interface MoneyInputProps extends Omit<InputFieldProps, 'ispassword' | 'textarea'> {
   onValueChange: (value: number) => void;
-  value: number;
 }
 
 export const MoneyInput: FC<MoneyInputProps> = ({
@@ -15,12 +14,10 @@ export const MoneyInput: FC<MoneyInputProps> = ({
   label,
   size: _defaultedSize,
   onValueChange,
-  value,
   ...props
 }) => {
 
   const [ field, { touched, error: fieldError } ] = useField(props);
-  const [ input, setInput ] = useState<number>(0);
   const [ inputString, setInputString ] = useState<string>('');
   const dollarColor = useColorModeValue('gray', 'gray.500');
 
@@ -30,13 +27,9 @@ export const MoneyInput: FC<MoneyInputProps> = ({
     const formattedValue = ((eventTarget === '-') ? eventTarget : unformattedValue.toLocaleString() + ((eventTarget.match(/(\.0*)(?!\d)/)) ? eventTarget.match(/(\.0*)(?!\d)/)?.[1] : ''));
 
     if (formattedValue.match(/^-?(?:\d{1,3}(?:,\d{3})*(?:\.\d{0,2})?)?$/)) {
-      setInput(unformattedValue);
       setInputString(formattedValue);
-    } else if (!eventTarget) {
-      setInput(0);
-      setInputString('');
+      onValueChange(unformattedValue);
     }
-    onValueChange(input);
   };
 
   return (
@@ -56,6 +49,7 @@ export const MoneyInput: FC<MoneyInputProps> = ({
           onChange={updateInput}
         />
       </InputGroup>
+      <FormErrorMessage>{fieldError}</FormErrorMessage>
     </FormControl>
   );
 };
