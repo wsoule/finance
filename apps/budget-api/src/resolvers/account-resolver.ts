@@ -59,7 +59,7 @@ export class AccountResolver {
     return existingAccount;
   }
 
-/** updates the users balance with inputed amount. */
+/** Updates the users balance with inputed amount. */
   @Mutation(() => Account)
   async accountUpdateBalance(
     @Arg('input') input: AccountUpdateBalanceInput,

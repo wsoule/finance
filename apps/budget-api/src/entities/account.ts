@@ -2,6 +2,7 @@ import { Ctx, Field, ObjectType } from 'type-graphql';
 import {
   BaseEntity,
   Column,
+  ColumnOptions,
   CreateDateColumn,
   Entity,
   OneToOne,
@@ -11,6 +12,22 @@ import {
 
 import { User } from './user';
 import { AppContext } from '../types';
+import { WithPrecisionColumnType } from 'typeorm/driver/types/ColumnTypes';
+import { ColumnNumericOptions } from 'typeorm/decorator/options/ColumnNumericOptions';
+
+export interface moneyColumnSettings {
+  type: WithPrecisionColumnType;
+  options: (ColumnOptions & ColumnNumericOptions);
+}
+
+export const moneyColumnProps: moneyColumnSettings = {
+  type: 'decimal',
+  options: {
+    precision: 20,
+    scale: 2
+  }
+};
+
 
 @Entity()
 @ObjectType()
@@ -27,21 +44,21 @@ export class Account extends BaseEntity {
   @Field()
   userId!: string;
 
-  /** balance of a user's account. */
-  @Column('decimal', { precision: 20, scale: 2 })
+  /** Balance of a user's account. */
+  @Column(moneyColumnProps)
   balance!: number;
 
-  /** date when the account is created. */
+  /** Date when the account is created. */
   @CreateDateColumn()
   @Field(() => Number)
   createdAt!: Date;
 
-  /** date when account was last updated. */
+  /** Date when account was last updated. */
   @UpdateDateColumn()
   @Field(() => Number)
   updatedAt!: Date;
 
-  /** gets the users balance if they have the correct ID. */
+  /** Gets the users balance if they are currently logged in. */
   @Field(() => Number, { name: 'balance' })
   balanceField(
     @Ctx() { request }: AppContext

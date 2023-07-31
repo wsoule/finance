@@ -110,7 +110,7 @@ export class UserResolver {
     request.session.userId = user.id;
 
     const account = new AccountResolver();
-    account.accountCreate({ request, redis, response });
+    await account.accountCreate({ request, redis, response });
 
     return user;
   }

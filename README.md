@@ -1,4 +1,20 @@
 # Finance
+## Description
+This is a project that leverages various dependencies to build a web application with modern technologies built around helping others with thier financial wellbeing. The project involves creating a full-stack application with a GraphQL API, a React-based front-end, and a PostgreSQL database using TypeORM for data management.
+
+## Features
+This project aims to demonstrate the following features:
+
+* Building a GraphQL API using Apollo Server.
+* Creating a responsive and accessible UI with Chakra UI.
+* Using React and Framer Motion for smooth animations and interactivity.
+* Managing form states with Formik.
+* Securing passwords using Argon2 hashing.
+* Storing sessions with Redis and Express session management.
+* Sending emails with Nodemailer.
+* Interacting with a PostgreSQL database using TypeORM.
+* Utilizing urql as the GraphQL client for the front-end.
+
 
 ## Development Setup
 
