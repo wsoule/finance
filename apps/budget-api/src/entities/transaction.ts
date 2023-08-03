@@ -1,4 +1,4 @@
-import { Ctx, Field, ObjectType } from 'type-graphql';
+import { Field, ObjectType } from 'type-graphql';
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Account } from './account';
 import { MoneyColumnType } from '@finance/node';
@@ -20,7 +20,7 @@ export class Transaction extends BaseEntity {
   /** Amount to add or subract from @Account */
   @Column(MoneyColumnType)
   @Field()
-  transactionAmount!: number;
+  amount!: number;
 
   /** Date when transaction was created. */
   @CreateDateColumn()
