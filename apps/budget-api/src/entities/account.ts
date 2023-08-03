@@ -2,32 +2,15 @@ import { Ctx, Field, ObjectType } from 'type-graphql';
 import {
   BaseEntity,
   Column,
-  ColumnOptions,
   CreateDateColumn,
   Entity,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
-
 import { User } from './user';
 import { AppContext } from '../types';
-import { WithPrecisionColumnType } from 'typeorm/driver/types/ColumnTypes';
-import { ColumnNumericOptions } from 'typeorm/decorator/options/ColumnNumericOptions';
-
-export interface moneyColumnSettings {
-  type: WithPrecisionColumnType;
-  options: (ColumnOptions & ColumnNumericOptions);
-}
-
-export const moneyColumnProps: moneyColumnSettings = {
-  type: 'decimal',
-  options: {
-    precision: 20,
-    scale: 2
-  }
-};
-
+import { MoneyColumnType } from '@finance/node';
 
 @Entity()
 @ObjectType()
@@ -45,7 +28,7 @@ export class Account extends BaseEntity {
   userId!: string;
 
   /** Balance of a user's account. */
-  @Column(moneyColumnProps)
+  @Column(MoneyColumnType)
   balance!: number;
 
   /** Date when the account is created. */

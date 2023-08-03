@@ -1,6 +1,7 @@
 import { Ctx, Field, ObjectType } from 'type-graphql';
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { Account, moneyColumnProps } from './account';
+import { Account } from './account';
+import { MoneyColumnType } from '@finance/node';
 
 @Entity()
 @ObjectType()
@@ -17,7 +18,7 @@ export class Transaction extends BaseEntity {
   accountId!: string;
 
   /** Amount to add or subract from @Account */
-  @Column(moneyColumnProps)
+  @Column(MoneyColumnType)
   @Field()
   transactionAmount!: number;
 
