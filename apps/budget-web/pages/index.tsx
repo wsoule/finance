@@ -13,7 +13,7 @@ export const Index: FC = () => {
   const [ , balanceUpdate ] = useAccountUpdateBalanceMutation();
   const [ { data: userData, fetching: userDetailsFetching }] = useUserDetailsQuery();
   const { balance, updatedAt, id: accountId } = balanceAmount?.accountDetails ?? { balance: 0 };
-  const [ stateBalance, setStateBalance ] = useState<number>(balance ?? 0);
+  const [ stateBalance, setStateBalance ] = useState<number | null>(balance ?? null);
   const { username, id: userId } = userData?.userDetails ?? {};
   const [ editBalance, setEditBalance ] = useState(false);
   const toast = useToast();
@@ -39,7 +39,8 @@ export const Index: FC = () => {
     setEditBalance(!editBalance);
   };
 
-  const handleAmountChange = (value: number): void => {
+  const handleAmountChange = (value: number | null): void => {
+    console.log('value', value);
     setStateBalance(value);
   };
 
@@ -77,8 +78,13 @@ export const Index: FC = () => {
             <Formik
               initialValues={{ balance }}
               onSubmit={async (values, { setErrors }): Promise<void> => {
-                values.balance = (stateBalance);
+                values.balance = (stateBalance ?? balance);
+                if (values.balance === balance) {
+                  setEditBalance(!editBalance);
+                  return;
+                }
                 const balanceUpdateResponse = await balanceUpdate({ input: values });
+                console.log(balanceUpdateResponse);
                 if (handleFormErrorMessages(balanceUpdateResponse, setErrors, toast)) {
                   toast({
                     title: 'Balance Update Success',
@@ -86,15 +92,15 @@ export const Index: FC = () => {
                     status: 'success',
                     isClosable: true
                   });
+                  setEditBalance(!editBalance);
                 }
-                setEditBalance(!editBalance);
               }}
               onReset={async (_values, { setErrors: _setErrors }): Promise<void> => {
                 setEditBalance(!editBalance);
               }}
             >{({ isSubmitting }): JSX.Element => (
                 <Form>
-                  <MoneyInput name='balance' label='Update balance' value={stateBalance} onValueChange={handleAmountChange}/>
+                  <MoneyInput name='balance' label='Update balance' value={stateBalance ?? balance} placeholder={balance.toFixed(2).toLocaleString()} onValueChange={handleAmountChange}/>
                   <Button isLoading={isSubmitting} type='submit' colorScheme='green'>&#10003;</Button>
                   <Button type='reset' colorScheme='red'>&#10005;</Button>
                 </Form>

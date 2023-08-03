@@ -1,11 +1,10 @@
-import { Field, InputType } from 'type-graphql';
 import { extendValidation, ControlValidators, FormGroupValidation } from '@finance/core';
-
 import { InputBase } from '@finance/node';
+import { Field, InputType } from 'type-graphql';
 import { passwordValidation } from './validation';
 
 @InputType()
-export class UserLoginInput extends InputBase{
+export class UserLoginInput extends InputBase {
   @Field()
   password!: string;
   @Field()

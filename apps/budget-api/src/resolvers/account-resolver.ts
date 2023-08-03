@@ -12,21 +12,19 @@ import {
 
 @Resolver()
 export class AccountResolver {
+  /** Creates a new account. */
   @Mutation(() => Account)
   async accountCreate(
     @Ctx() { request }: AppContext
     ): Promise<Account> {
     const { userId } = request.session;
-    
     if (!userId) {
       throw new AuthenticationError('You Must Be Logged In To Create Account');
     }
-
     const  [ existingAccount, existingUser ] = await Promise.all([
       Account.findOne({ where: [{ userId }] }),
       User.findOne({ where: [ { id: userId } ] })
     ]);
-
     if (existingAccount) {
       throw new FormError({
         control: [ 'Account Already Created!' ]
@@ -36,7 +34,6 @@ export class AccountResolver {
         control: [ 'User Not Found!' ]
       });
     }
-
     const account = Account.create({
       balance: 0,
       userId: userId
@@ -46,7 +43,8 @@ export class AccountResolver {
 
     return account;
   }
-
+  
+/** Get details of the user's account. */
   @Query(() => Account, { nullable: true })
   async accountDetails(
     @Ctx() { request }: AppContext
@@ -74,19 +72,15 @@ export class AccountResolver {
     input.throwIfInvalid();
     const { balance } = input;
     const { userId } = request.session;
-
     if (!userId) {
       throw new AuthenticationError('You must Be Logged In Update Account!');
     }
-
     let account = await Account.findOne({ where: [ { userId } ] });
-
     if (!account) {
       throw new FormError({
         control: [ 'Account Not Found!' ]
       });
     }
-
     await Account.update({
       userId
       }, {

@@ -120,9 +120,7 @@ export class UserResolver {
     @Ctx() { request }: AppContext
   ): Promise<User | null> {
     const { userId } = request.session;
-
     let where: FindOptionsWhere<User>| null = null;
-
     if (userId) {
       where = { id: userId };
     }
@@ -149,16 +147,13 @@ export class UserResolver {
         }
       });
     }
-
     const token = v4();
-
     await redis.set(
       `${RedisKey.forgotPassword}:${token}`,
       user.id,
       'EX',
       Time.converters.fromDay(3)
     );
-
     await sendEmail({
       from: 'budget@finance.com',
       html: [
@@ -186,7 +181,6 @@ export class UserResolver {
       control: [ 'Invalid username or password' ]
     });
   }
-
   request.session.userId = existingUser.id;
 
   return existingUser;
