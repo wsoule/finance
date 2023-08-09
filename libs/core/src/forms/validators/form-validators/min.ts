@@ -1,4 +1,4 @@
-import { Keyed } from '../../..//types';
+import { Keyed } from '../../../types';
 import { MinError } from '../errors';
 import { FormValidator } from '../form-validator';
 import { requiredValidator } from './required';

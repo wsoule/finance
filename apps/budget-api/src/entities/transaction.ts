@@ -2,6 +2,7 @@ import { Field, ObjectType } from 'type-graphql';
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Account } from './account';
 import { MoneyColumnType } from '@finance/node';
+import { TransactionType } from './transaction-type';
 
 @Entity()
 @ObjectType()
@@ -10,6 +11,12 @@ export class Transaction extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field()
   id!: string;
+
+  /** Transaction type id. */
+  @Column()
+  @OneToOne(() => TransactionType)
+  @Field()
+  transactionTypeId!: number;
 
   /** Account number to modify. */
   @Column()

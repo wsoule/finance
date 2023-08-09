@@ -31,6 +31,8 @@ export function defaultErrorProcessor(
       return `${label} must satisfy patterns.`;
     case Validators.required.key:
       return `${label} is required.`;
+    case Validators.cannotBeZero.key:
+      return `${label} cannot be zero`;
   }
 
   return null;

@@ -48,7 +48,7 @@ export class AccountResolver {
   @Query(() => Account, { nullable: true })
   async accountDetails(
     @Ctx() { request }: AppContext
-    ): Promise<Account | null> {
+    ): Promise<Account> {
     const { userId } = request.session;
     if(!userId) {
       throw new AuthenticationError('You Must Be Logged In To Access Account!');

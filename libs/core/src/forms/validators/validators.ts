@@ -1,4 +1,5 @@
 import {
+  cannotBeZeroValidator,
   emailValidator,
   maxValidator,
   maxlengthValidator,
@@ -11,6 +12,7 @@ import {
 } from './form-validators';
 
 export class Validators {
+  public static readonly cannotBeZero = cannotBeZeroValidator;
   public static readonly email = emailValidator;
   public static readonly max = maxValidator;
   public static readonly maxlength = maxlengthValidator;

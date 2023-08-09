@@ -67,7 +67,7 @@ export function  createUrqlClient(): Client {
               );
             },
             userLogout: (result, _args, cache, _info) => {
-              // Update userDetails when userLogout is calld
+              // Update userDetails when userLogout is called.
               updateQuery<UserLogoutMutation, UserDetailsQuery>(
                 cache,
                 { query: UserDetailsDocument },
@@ -79,6 +79,7 @@ export function  createUrqlClient(): Client {
                 });
             },
             accountUpdateBalance: (result, _args, cache, _info) => {
+              // Update accountDetails when accountUpdateBalance is called.
               updateQuery<AccountUpdateBalanceMutation, AccountDetailsQuery>(
                 cache,
                 { query: AccountDetailsDocument },
