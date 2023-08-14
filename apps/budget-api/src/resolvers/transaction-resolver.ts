@@ -18,13 +18,15 @@ export class TransactionResolver {
     if (!userId) {
       throw new AuthenticationError('Must Be Logged In to Create Transaction');
     }
-    const existingAccount = await Account.findOne({ where: [ { userId } ] });
+
+    const existingAccount = await Account.findOneBy({ userId });
     if (!existingAccount) {
       throw new FormError({
         control: [ 'Account Not Found!' ]
       });
     }
-    const existingTransactionType = await TransactionType.findOne({ where: [ { transactionType } ] });
+
+    const existingTransactionType = await TransactionType.findOneBy({ transactionType });
     if (!existingTransactionType) {
       throw new FormError({
         control: [ `Transaction Type '${transactionType}' not found!` ]
@@ -53,13 +55,13 @@ export class TransactionResolver {
     if (!userId) {
       throw new AuthenticationError('Must Be Logged In To Get Transaction');
     }
-    const existingAccount = await Account.findOne({ where: [ { userId } ] });
+    const existingAccount = await Account.findOneBy({ userId });
     if (!existingAccount) {
       throw new FormError({
         control: [ 'Account Not Found!' ]
       });
     }
-    const existingTransaction = await Transaction.find({ where: [ { accountId: existingAccount.id } ] });
+    const existingTransaction = await Transaction.findBy({ accountId: existingAccount.id });
     if (!existingTransaction) {
       throw new FormError({
         control: [ 'Transaction Not Found!' ]
