@@ -1,10 +1,10 @@
 /* eslint-disable */
 export default {
-  displayName: 'budget-api-e2e',
+  displayName: 'firestarter-api-e2e',
   preset: '../../jest.preset.js',
   globalSetup: '<rootDir>/src/support/global-setup.ts',
   globalTeardown: '<rootDir>/src/support/global-teardown.ts',
-  setupFiles: ['<rootDir>/src/support/test-setup.ts'],
+  setupFiles: [ '<rootDir>/src/support/test-setup.ts' ],
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]s$': [
@@ -14,6 +14,6 @@ export default {
       },
     ],
   },
-  moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/budget-api-e2e',
+  moduleFileExtensions: [ 'ts', 'js', 'html' ],
+  coverageDirectory: '../../coverage/firestarter-api-e2e',
 };

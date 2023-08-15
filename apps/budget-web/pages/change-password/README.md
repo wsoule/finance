@@ -1,1 +1,0 @@
-generated using ```nx g page "[token]" --project=budget-web --directory=change-password```

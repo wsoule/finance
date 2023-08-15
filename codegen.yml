@@ -1,8 +1,8 @@
 overwrite: true
 schema: "http://localhost:3333/graphql"
-documents: "apps/budget-web/graphql/**/*.graphql"
+documents: "apps/firestarter-web/graphql/**/*.graphql"
 generates:
-  apps/budget-web/generated/graphql.tsx:
+  apps/firestarter-web/generated/graphql.tsx:
     plugins:
       - "typescript"
       - "typescript-operations"

@@ -12,10 +12,10 @@
   },
   "homepage": "https://github.com/wsoule/finance#readme",
   "scripts": {
-    "build:all": "clear && nx run-many --targets=lint,test,build --all",
+    "build:all": "nx run-many --targets=lint,test,build --all",
     "gen:graphql": "graphql-codegen --config codegen.yml",
     "graph": "nx graph",
-    "start": "nx run-many --targets=start --projects=budget-api,budget-web",
+    "start": "nx run-many --targets=start --projects=firestarter-api,firestarter-web",
     "theme": "chakra-cli tokens ./libs/react/src/theme/theme.ts"
   },
   "private": true,
