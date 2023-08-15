@@ -1,1 +1,1 @@
-export * from './moneyColumn';
+export * from './money-column';
