@@ -1,7 +1,6 @@
 import { default as argon2 } from 'argon2';
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { v4 } from 'uuid';
-
 import { User } from '../entities';
 import { AppContext, RedisKey } from '../types';
 import {
@@ -75,13 +74,11 @@ export class UserResolver {
     input.throwIfInvalid();
     const { email, password, username } = input;
 
-    const existingUser = await User.findOne({
-      where: [
-        { username },
-        { email: username },
-        { email },
-        { username: email }
-      ]
+    const existingUser = await User.findOneBy({
+      username,
+      // email: username,
+      email
+      // username: email
     });
     if (existingUser) {
       throw new FormError({
@@ -165,7 +162,7 @@ export class UserResolver {
   ): Promise<User> {
     input.throwIfInvalid();
     const { password, username } = input;
-    const existingUser = await User.findOne({ where: [ { username }, { email: username } ] });
+    const existingUser = await User.findOneBy({ username, email: username });
     if (!existingUser || !await argon2.verify(existingUser.password, password)) {
       throw new FormError({
         control: [ 'Invalid username or password' ]

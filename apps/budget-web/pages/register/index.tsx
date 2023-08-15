@@ -8,6 +8,7 @@ import { useUserCreateMutation } from '../../generated/graphql';
 import { handleFormErrorMessages, InputField, Link } from '@finance/react';
 import appStyles from '../app.module.scss';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RegisterProps {
 }
 
@@ -32,9 +33,9 @@ export const RegisterPage: FC<RegisterProps> = () => {
           </Text>
         </Box>
         <Formik
-          initialValues={{password: '', username: '', email: ''}}
-          onSubmit={async (values, {setErrors}): Promise<void> => {
-            const userCreateResponse = await userCreate({input: values});
+          initialValues={{ password: '', username: '', email: '' }}
+          onSubmit={async (values, { setErrors }): Promise<void> => {
+            const userCreateResponse = await userCreate({ input: values });
 
             if (handleFormErrorMessages(userCreateResponse, setErrors, toast)) {
               router.push('/');
@@ -46,7 +47,7 @@ export const RegisterPage: FC<RegisterProps> = () => {
               });
             }
           }}
-        >{({isSubmitting}): JSX.Element => (
+        >{({ isSubmitting }): JSX.Element => (
             <Form className={appStyles.spacedRows}>
               <InputField autoFocus label='Username' name='username'/>
               <InputField label='Email' name='email' type='email'/>
