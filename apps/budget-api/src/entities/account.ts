@@ -8,9 +8,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
-
 import { User } from './user';
 import { AppContext } from '../types';
+import { MoneyColumnType } from '@finance/node';
 
 @Entity()
 @ObjectType()
@@ -27,21 +27,21 @@ export class Account extends BaseEntity {
   @Field()
   userId!: string;
 
-  /** balance of a user's account. */
-  @Column('decimal', { precision: 20, scale: 2 })
+  /** Balance of a user's account. */
+  @Column(MoneyColumnType)
   balance!: number;
 
-  /** date when the account is created. */
+  /** Date when the account is created. */
   @CreateDateColumn()
   @Field(() => Number)
   createdAt!: Date;
 
-  /** date when account was last updated. */
+  /** Date when account was last updated. */
   @UpdateDateColumn()
   @Field(() => Number)
   updatedAt!: Date;
 
-  /** gets the users balance if they have the correct ID. */
+  /** Gets the users balance if they are currently logged in. */
   @Field(() => Number, { name: 'balance' })
   balanceField(
     @Ctx() { request }: AppContext

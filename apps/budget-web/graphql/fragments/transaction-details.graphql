@@ -1,0 +1,4 @@
+fragment TransactionDetails on Transaction {
+  amount
+  id
+}

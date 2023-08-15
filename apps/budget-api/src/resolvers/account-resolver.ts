@@ -1,28 +1,24 @@
-import {
-    Arg,
-  Ctx,
-  Mutation,
-  Query,
-  Resolver
-} from 'type-graphql';
-
 import { Account, User } from '../entities';
+import { AuthenticationError, FormError } from '@finance/node';
 import { AppContext } from '../types';
-import { FormError } from '@finance/node';
-import { AccountUpdateBalanceInput } from './types/account-update-balance-input';
+import { AccountUpdateBalanceInput } from './types';
+import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 
 @Resolver()
 export class AccountResolver {
+  /** Creates a new account. */
   @Mutation(() => Account)
   async accountCreate(
     @Ctx() { request }: AppContext
-    ): Promise<Account> {
+  ): Promise<Account> {
     const { userId } = request.session;
-    const  [ existingAccount, existingUser ] = await Promise.all([
-      Account.findOne({ where: [{ userId }] }),
-      User.findOne({ where: [ { id: userId } ] })
+    if (!userId) {
+      throw new AuthenticationError('You Must Be Logged In To Create Account');
+    }
+    const [ existingAccount, existingUser ] = await Promise.all([
+      Account.findOneBy({ userId }),
+      User.findOneBy({ id: userId })
     ]);
-
     if (existingAccount) {
       throw new FormError({
         control: [ 'Account Already Created!' ]
@@ -32,7 +28,6 @@ export class AccountResolver {
         control: [ 'User Not Found!' ]
       });
     }
-
     const account = Account.create({
       balance: 0,
       userId: userId
@@ -43,13 +38,16 @@ export class AccountResolver {
     return account;
   }
 
+  /** Get details of the user's account. */
   @Query(() => Account, { nullable: true })
   async accountDetails(
     @Ctx() { request }: AppContext
-    ): Promise<Account | null> {
+  ): Promise<Account> {
     const { userId } = request.session;
-    const existingAccount = await Account.findOne({ where: [ { userId } ] });
-
+    if (!userId) {
+      throw new AuthenticationError('You Must Be Logged In To Access Account!');
+    }
+    const existingAccount = await Account.findOneBy({ userId });
     if (!existingAccount) {
       throw new FormError({
         control: [ 'Account Not Found!' ]
@@ -59,7 +57,7 @@ export class AccountResolver {
     return existingAccount;
   }
 
-/** updates the users balance with inputed amount. */
+  /** Updates the users balance with inputted amount. */
   @Mutation(() => Account)
   async accountUpdateBalance(
     @Arg('input') input: AccountUpdateBalanceInput,
@@ -68,21 +66,22 @@ export class AccountResolver {
     input.throwIfInvalid();
     const { balance } = input;
     const { userId } = request.session;
-    let account = await Account.findOne({ where: [ { userId } ] });
-
+    if (!userId) {
+      throw new AuthenticationError('You must Be Logged In Update Account!');
+    }
+    let account = await Account.findOneBy({ userId });
     if (!account) {
       throw new FormError({
         control: [ 'Account Not Found!' ]
       });
     }
-
     await Account.update({
       userId
-      }, {
-        balance
-      });
-    account = await Account.findOne({ where: [ { userId } ] }) ?? account;
+    }, {
+      balance
+    });
+    account = await Account.findOneBy({ userId }) ?? account;
 
     return account;
-    }
+  }
 }

@@ -1,3 +1,4 @@
+export * from './cannot-be-zero';
 export * from './email';
 export * from './max';
 export * from './maxlength';
