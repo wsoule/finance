@@ -1,38 +1,38 @@
 {
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "name": "budget-web",
+  "name": "firestarter-api",
   "projectType": "application",
-  "sourceRoot": "apps/budget-web",
+  "sourceRoot": "apps/firestarter-api/src",
   "tags": [],
   "targets": {
     "build": {
       "configurations": {
-        "development": {
-          "outputPath": "apps/budget-web"
-        },
+        "development": {},
         "production": {}
       },
       "defaultConfiguration": "production",
-      "executor": "@nx/next:build",
+      "executor": "@nx/webpack:webpack",
       "options": {
-        "outputPath": "dist/apps/budget-web",
-        "root": "apps/budget-web"
+        "assets": [
+          "apps/firestarter-api/src/assets"
+        ],
+        "compiler": "tsc",
+        "isolatedConfig": true,
+        "main": "apps/firestarter-api/src/main.ts",
+        "outputPath": "dist/apps/api",
+        "target": "node",
+        "tsConfig": "apps/firestarter-api/tsconfig.app.json",
+        "webpackConfig": "apps/firestarter-api/webpack.config.js"
       },
       "outputs": [
         "{options.outputPath}"
       ]
     },
-    "export": {
-      "executor": "@nx/next:export",
-      "options": {
-        "buildTarget": "budget-web:build:production"
-      }
-    },
     "lint": {
       "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": [
-          "apps/budget-web/**/*.{ts,tsx,js,jsx}"
+          "apps/firestarter-api/**/*.ts"
         ]
       },
       "outputs": [
@@ -42,34 +42,31 @@
     "setup": {
       "configurations": {
         "development": {
-          "args": "--path=apps/budget-web --env=development"
+          "args": "--path=apps/firestarter-api/src --env=development"
         },
         "production": {
-          "args": "--path=apps/budget-web --env=production"
+          "args": "--path=apps/firestarter-api/src --env=production"
         }
       },
       "executor": "nx:run-commands",
       "options": {
-        "args": "--path=apps/budget-web --env=local",
+        "args": "--path=apps/firestarter-api/src --env=local",
         "command": "node libs/core/scripts/setup-environment.js --path={args.path} --env={args.env}"
       }
     },
     "start": {
       "configurations": {
         "development": {
-          "buildTarget": "budget-web:build:development",
-          "dev": true
+          "buildTarget": "firestarter-api:build:development"
         },
         "production": {
-          "buildTarget": "budget-web:build:production",
-          "dev": false
+          "buildTarget": "firestarter-api:build:production"
         }
       },
       "defaultConfiguration": "development",
-      "executor": "@nx/next:server",
+      "executor": "@nx/js:node",
       "options": {
-        "buildTarget": "budget-web:build",
-        "dev": true
+        "buildTarget": "firestarter-api:build"
       }
     },
     "test": {
@@ -81,7 +78,7 @@
       },
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "apps/budget-web/jest.config.ts",
+        "jestConfig": "apps/firestarter-api/jest.config.ts",
         "passWithNoTests": true
       },
       "outputs": [

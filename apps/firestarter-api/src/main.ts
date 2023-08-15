@@ -97,7 +97,7 @@ async function main(): Promise<void> {
   app.use('/assets', express.static(pathJoin(__dirname, 'assets')));
 
   app.get('/api', (_req, res) => {
-    res.send({ message: 'Welcome to budget-api'});
+    res.send({ message: 'Welcome to firestarter-api' });
   });
 
   const redisClient = new IoRedis();

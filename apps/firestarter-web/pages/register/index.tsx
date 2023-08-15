@@ -41,7 +41,7 @@ export const RegisterPage: FC<RegisterProps> = () => {
               router.push('/');
               toast({
                 title: 'User Creation Success',
-                description: 'Welcome to Budgeting!',
+                description: 'Welcome to FIRESTARTER!',
                 status: 'success',
                 isClosable: true
               });

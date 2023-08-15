@@ -45,7 +45,7 @@ export class UserResolver {
 
     await redis.del(`${RedisKey.forgotPassword}:${token}`);
     await sendEmail({
-      from: 'budget@finance.com',
+      from: 'firestarter@finance.com',
       html: [
         'Your password has been successfully updated!'
       ].join('\n'),
@@ -142,7 +142,7 @@ export class UserResolver {
       Time.converters.fromDay(3)
     );
     await sendEmail({
-      from: 'budget@finance.com',
+      from: 'firestarter@finance.com',
       html: [
         `<a href="${environment.urls.local}/change-password/${token}">Change Password</a>`
       ].join('\n'),
