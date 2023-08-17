@@ -20,7 +20,7 @@ export class Account extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field()
   id!: string;
-  
+
   /** ID of the entity. */
   @Column()
   @OneToOne(() => User)
@@ -45,7 +45,7 @@ export class Account extends BaseEntity {
   @Field(() => Number, { name: 'balance' })
   balanceField(
     @Ctx() { request }: AppContext
-    ): number {
+  ): number {
     return (request.session.userId === this.userId) ? this.balance : 0;
   }
 }

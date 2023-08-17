@@ -1,0 +1,9 @@
+overwrite: true
+schema: "http://localhost:3333/graphql"
+documents: "apps/firestarter-web/graphql/**/*.graphql"
+generates:
+  apps/firestarter-web/generated/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-urql"

@@ -162,7 +162,7 @@ export class UserResolver {
   ): Promise<User> {
     input.throwIfInvalid();
     const { password, username } = input;
-    const existingUser = await User.findOneBy({ username, email: username });
+    const existingUser = await User.findOneBy({ username });
     if (!existingUser || !await argon2.verify(existingUser.password, password)) {
       throw new FormError({
         control: [ 'Invalid username or password' ]

@@ -1,0 +1,6 @@
+mutation TransactionTypeEdit($input: EditTransactionTypeInput!){
+  transactionTypeEdit(editedTransactionType: $input){
+    id
+    transactionType
+  }
+}

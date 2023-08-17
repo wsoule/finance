@@ -42,10 +42,11 @@ export class AccountResolver {
   @Query(() => Account, { nullable: true })
   async accountDetails(
     @Ctx() { request }: AppContext
-  ): Promise<Account> {
+  ): Promise<Account | null> {
     const { userId } = request.session;
     if (!userId) {
-      throw new AuthenticationError('You Must Be Logged In To Access Account!');
+      return null;
+      // throw new AuthenticationError('You Must Be Logged In To Access Account!');
     }
     const existingAccount = await Account.findOneBy({ userId });
     if (!existingAccount) {

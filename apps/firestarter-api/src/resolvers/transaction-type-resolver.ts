@@ -1,8 +1,7 @@
-import { Arg, Mutation, Resolver } from 'type-graphql';
+import { Arg, Mutation, Query, Resolver } from 'type-graphql';
 import { TransactionType } from '../entities';
-import { NewTransactionTypeInput } from './types';
+import { EditTransactionTypeInput, GetTransactionTypeInput, NewTransactionTypeInput } from './types';
 import { FormError } from '@finance/node';
-import { EditTransactionType } from './types/edit-transaction-type';
 
 @Resolver()
 export class TransactionTypeResolver {
@@ -27,7 +26,7 @@ export class TransactionTypeResolver {
 
   @Mutation(() => TransactionType)
   async transactionTypeEdit(
-    @Arg('editedTransactionType') editedTransactionType: EditTransactionType
+    @Arg('editedTransactionType') editedTransactionType: EditTransactionTypeInput
   ): Promise<TransactionType | null> {
     editedTransactionType.throwIfInvalid();
     const { transactionType: newTransactionType, transactionTypeID } = editedTransactionType;
@@ -45,5 +44,20 @@ export class TransactionTypeResolver {
       transactionType: newTransactionType
     });
     return await TransactionType.findOneBy({ id: transactionTypeID });
+  }
+
+  @Query(() => TransactionType, { nullable: true })
+  async transactionTypeDetails(
+    @Arg('getTransactionTypeInput') getTransactionTypeInput: GetTransactionTypeInput
+  ): Promise<TransactionType> {
+    getTransactionTypeInput.throwIfInvalid();
+    const { transactionTypeID } = getTransactionTypeInput;
+    const existingTransactionType = await TransactionType.findOneBy({ id: transactionTypeID });
+    if (!existingTransactionType) {
+      throw new FormError({
+        control: [ `TransactionTypeID ${transactionTypeID} Not Found!` ]
+      });
+    }
+    return existingTransactionType;
   }
 }

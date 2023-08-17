@@ -35,7 +35,7 @@ export class TransactionResolver {
     const transaction = Transaction.create({
       amount,
       accountId: existingAccount.id,
-      transactionTypeId: existingTransactionType.id
+      transactionTypeID: existingTransactionType.id
     });
     const account = new AccountResolver();
     const accountInput = new AccountUpdateBalanceInput();
