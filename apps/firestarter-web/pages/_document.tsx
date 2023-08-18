@@ -1,9 +1,9 @@
 import { ColorModeScript } from '@chakra-ui/react';
 import {
+  default as NextDocument,
   Head,
   Html,
   Main,
-  default as NextDocument,
   NextScript
 } from 'next/document';
 import { theme } from '@finance/react';

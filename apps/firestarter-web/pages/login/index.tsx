@@ -21,7 +21,7 @@ export const LoginPage: FC = () => {
 
   return (
     <>
-      <title>login</title>
+      <title>Login</title>
       <Page guards={guardResults} size='medium'>
         <Formik
           initialValues={{ password: '', username: '' }}
@@ -39,11 +39,11 @@ export const LoginPage: FC = () => {
           }}
         >{({ isSubmitting }): JSX.Element => (
             <Form className={appStyles.spacedRows}>
-              <InputField autoFocus label='Username' name='username' placeholder='username'/>
-              <InputField label='Password' name='password' placeholder='password' type='password' ispassword/>
+              <InputField autoFocus label='Username' name='username' placeholder='username' />
+              <InputField label='Password' name='password' placeholder='password' type='password' ispassword />
               <Stack direction='row' justifyContent='center' spacing='1rem'>
-                <Link label='Need an account?' route='/register'/>
-                <Link label='Forgot password?' route='/forgot-password'/>
+                <Link label='Need an account?' route='/register' />
+                <Link label='Forgot password?' route='/forgot-password' />
               </Stack>
               <Stack direction='row' justifyContent='end' spacing='1rem'>
                 <Button isLoading={isSubmitting} type='submit'>

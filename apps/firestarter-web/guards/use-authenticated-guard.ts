@@ -10,18 +10,21 @@ export const useAuthenticatedGuard = (): boolean | null => {
   const [ { data, fetching } ] = useUserDetailsQuery();
 
   useEffect(() => {
-    const { toast } = createStandaloneToast();
-    const newSuccess = (fetching) ? null : data?.userDetails != null;
-    if (newSuccess == false) {
-      toast({
-        isClosable: true,
-        status: 'error',
-        title: 'Please log in to access this route.'
-      });
-      router.push(`/?route=${router.asPath}`);
-    }
-    setSuccess(newSuccess);
-  }, [fetching, data?.userDetails, router]);
+    const checkAuthentication = async (): Promise<void> => {
+      const { toast } = createStandaloneToast();
+      const newSuccess = (fetching) ? null : data?.userDetails != null;
+      if (newSuccess == false) {
+        toast({
+          isClosable: true,
+          status: 'error',
+          title: 'Please log in to access this route.'
+        });
+        await router.push(`/?route=${router.asPath}`);
+      }
+      setSuccess(newSuccess);
+    };
+    checkAuthentication();
+  }, [ fetching, data?.userDetails, router ]);
 
   return success;
 };

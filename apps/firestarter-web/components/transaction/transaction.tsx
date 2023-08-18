@@ -1,8 +1,9 @@
 import { FC, useEffect, useState } from 'react';
 import { Stat, StatHelpText, StatLabel, StatNumber, Text } from '@chakra-ui/react';
-import { convertToMoney } from '@finance/core';
 import { useTransactionTypeDetailsQuery } from '../../generated/graphql';
+import { convertToMoney } from '@finance/core';
 import { Divider } from '@chakra-ui/layout';
+import { MoneyInput } from '@finance/react';
 
 export interface TransactionProps {
   transactionID: string;
@@ -16,26 +17,41 @@ export const Transaction: FC<TransactionProps> = ({
   transactionAmount
 }) => {
   const [ transactionTypeString, setTransactionTypeString ] = useState<null | string>(null);
+  const [ toggleTransactionValue, setToggleTransactionValue ] = useState<boolean>(false);
   const [ { data: transactionTypeData, fetching: transactionTypeFetching } ] = useTransactionTypeDetailsQuery({
     variables: {
       input: { transactionTypeID: transactionType }
     }
   });
+  const stuff = (value: number | null): void => {
+    console.log(value);
+
+  };
   useEffect(() => {
     setTransactionTypeString(transactionTypeData?.transactionTypeDetails?.transactionType || 'Loading...');
   }, [ transactionTypeData, transactionTypeData?.transactionTypeDetails?.transactionType, transactionTypeFetching ]);
   return (
     <Stat key={transactionID} borderWidth={'1px'} borderRadius={'lg'} padding={2} margin={'2rem'}>
       <StatLabel fontSize={'2xl'}>Transaction Amount</StatLabel>
-      <StatNumber color={transactionAmount > 0 ? 'green.400' : 'red.400'}>
-        {convertToMoney(transactionAmount)}
-      </StatNumber>
+      <>
+        {!toggleTransactionValue
+          ? (<StatNumber onClick={(): void => {
+            setToggleTransactionValue(!toggleTransactionValue);
+          }} color={transactionAmount > 0 ? 'green.400' : 'red.400'}>
+            {convertToMoney(transactionAmount)}
+          </StatNumber>)
+          : <MoneyInput onBlur={(): void => {
+            setToggleTransactionValue(!toggleTransactionValue);
+          }} autoFocus={true} placeholder={transactionAmount.toFixed(2)} onValueChange={stuff} />
+        }
+      </>
       <StatHelpText>
-        <StatLabel fontSize={'xl'}>Transaction Type</StatLabel>
+        <Text fontSize={'xl'}>Transaction Type</Text>
         <Text fontSize={'xl'} mb={2}>{transactionTypeString}</Text>
-        <Divider/>
-        <StatLabel mt={2}>TransactionID</StatLabel>
-        {transactionID}
+        <Divider />
+        <Text mt={2} fontWeight={'bold'}>TransactionID</Text>
+        <Text>{transactionID}</Text>
       </StatHelpText>
-    </Stat>);
+    </Stat>
+  );
 };

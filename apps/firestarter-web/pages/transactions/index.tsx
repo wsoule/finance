@@ -1,9 +1,17 @@
-import { FC, useEffect, useState } from 'react';
+import {
+  FC,
+  useEffect,
+  useState
+} from 'react';
 import { Page } from '../../components';
 import { useTransactionDetailsQuery } from '../../generated/graphql';
-import { Heading } from '@chakra-ui/react';
+import {
+  Heading,
+  Text
+} from '@chakra-ui/react';
 import { useAuthenticatedGuard } from '../../guards';
 import { Transaction } from '../../components/transaction';
+import { Loading } from '@finance/react';
 
 const loggedInGuards = [ useAuthenticatedGuard ];
 
@@ -14,11 +22,12 @@ export const Transactions: FC = () => {
 
   useEffect(() => {
     if (transactionsFetching) {
-      setTransactionPageContents(<p>hello</p>);
+      setTransactionPageContents(
+        <Loading isLoading={transactionsFetching} loadingText={'Loading Transactions...'} />
+      );
     } else if (!transactionData || transactionData.transactionDetails.length < 1) {
-      setTransactionPageContents(<div>NO TRANSACTION DATA</div>);
+      setTransactionPageContents(<Text>NO TRANSACTION DATA</Text>);
     } else {
-      console.log('transactionDetails amount', transactionData);
       setTransactionPageContents(transactionData.transactionDetails.map((transactionDetails) => {
         return (
           <Transaction
@@ -33,15 +42,19 @@ export const Transactions: FC = () => {
   }, [ transactionsFetching, transactionData ]);
 
   return (
-    <div>
-      <Page size={'large'} guards={routeGuards}>
-        <Heading>
-          Transactions
-        </Heading>
-        {transactionPageContents}
-      </Page>
-    </div>
+    <>
+      <title>Transactions</title>
+      <div>
+        <Page size={'large'} guards={routeGuards}>
+          <Heading>Transactions</Heading>
+          <div>
+            {transactionPageContents}
+          </div>
+        </Page>
+      </div>
+    </>
   );
 };
 
 export default Transactions;
+// TODO - create test file that has a user that is logged in

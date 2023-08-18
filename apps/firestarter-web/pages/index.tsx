@@ -1,11 +1,35 @@
-import { Button, Heading, Stat, StatHelpText, StatLabel, StatNumber, Text, useToast } from '@chakra-ui/react';
+import {
+  Button,
+  Heading,
+  Stat,
+  StatHelpText,
+  StatLabel,
+  StatNumber,
+  Text,
+  useToast
+} from '@chakra-ui/react';
 import { convertToMoney } from '@finance/core';
-import { handleFormErrorMessages, Link, MoneyInput } from '@finance/react';
-import { Form, Formik } from 'formik';
+import {
+  handleFormErrorMessages,
+  Link,
+  MoneyInputField
+} from '@finance/react';
+import {
+  Form,
+  Formik
+} from 'formik';
 import { useRouter } from 'next/router';
-import { FC, useEffect, useState } from 'react';
+import {
+  FC,
+  useEffect,
+  useState
+} from 'react';
 import { Page } from '../components';
-import { useAccountDetailsQuery, useAccountUpdateBalanceMutation, useUserDetailsQuery } from '../generated/graphql';
+import {
+  useAccountDetailsQuery,
+  useAccountUpdateBalanceMutation,
+  useUserDetailsQuery
+} from '../generated/graphql';
 
 export const Index: FC = () => {
   const [ { data: accountData, fetching: accountDetailsFetching } ] = useAccountDetailsQuery();
@@ -104,8 +128,9 @@ export const Index: FC = () => {
                 }}
               >{({ isSubmitting }): JSX.Element => (
                   <Form>
-                    <MoneyInput name='balance' label='Update balance' value={stateBalance ?? balance}
-                      placeholder={balance.toFixed(2).toLocaleString()} onValueChange={handleAmountChange}/>
+                    <MoneyInputField name='balance' label='Update balance' value={stateBalance ?? balance}
+                      placeholder={balance.toFixed(2).toLocaleString()}
+                      onValueChange={handleAmountChange} />
                     <Button isLoading={isSubmitting} type='submit' colorScheme='green'>&#10003;</Button>
                     <Button type='reset' colorScheme='red'>&#10005;</Button>
                   </Form>
@@ -113,7 +138,7 @@ export const Index: FC = () => {
               </Formik>
             )}
           </Stat>
-          <Link label={'transactions'} route={'/transactions'}/>
+          <Link label={'transactions'} route={'/transactions'} />
         </>
       );
     }
