@@ -7,20 +7,35 @@ import {
   InputLeftElement,
   useColorModeValue
 } from '@chakra-ui/react';
-import { FieldInputProps, useField } from 'formik';
+import {
+  FieldInputProps,
+  useField
+} from 'formik';
 import { InputFieldProps } from '../input-field';
-import { ChangeEvent, FC, useState } from 'react';
+import {
+  ChangeEvent,
+  FC,
+  useState
+} from 'react';
 
 export interface MoneyInputFieldProps extends Omit<InputFieldProps, 'ispassword' | 'textarea'> {
+  /**Provide a handle function to turn the @value into a number/*/
   onValueChange: (value: number | null) => void;
   fieldProps?: FieldInputProps<any>;
 }
 
 export type MoneyInputProps = Omit<MoneyInputFieldProps, 'name'>;
-
+/**
+ * Input that shows the value as money.
+ * @param error
+ * @param _defaultedSize
+ * @param onValueChange Provide a handle function to turn the @value into a number.
+ * @param fieldProps If MoneyInputProps is being used in a form, pass in the field props here.
+ * @param props All of the other props of Input type.
+ * @constructor
+ */
 export const MoneyInput: FC<MoneyInputProps> = ({
   error,
-  label,
   size: _defaultedSize,
   onValueChange,
   fieldProps,
@@ -69,6 +84,15 @@ export const MoneyInput: FC<MoneyInputProps> = ({
   );
 };
 
+/**
+ * Creates a field item to use the @MoneyInput.
+ * @param error Provide any extra errors to show.
+ * @param label Label for above the input field.
+ * @param _defaultedSize
+ * @param onValueChang Provide a handle function pass into @MoneyInput component to turn the @value into a number.
+ * @param props The rest of the Props available on @Input component
+ * @constructor
+ */
 export const MoneyInputField: FC<MoneyInputFieldProps> = ({
   error,
   label,

@@ -1,6 +1,15 @@
-import { Arg, Mutation, Query, Resolver } from 'type-graphql';
+import {
+  Arg,
+  Mutation,
+  Query,
+  Resolver
+} from 'type-graphql';
 import { TransactionType } from '../entities';
-import { EditTransactionTypeInput, GetTransactionTypeInput, NewTransactionTypeInput } from './types';
+import {
+  EditTransactionTypeInput,
+  GetTransactionTypeInput,
+  NewTransactionTypeInput
+} from './types';
 import { FormError } from '@finance/node';
 
 @Resolver()
@@ -59,5 +68,10 @@ export class TransactionTypeResolver {
       });
     }
     return existingTransactionType;
+  }
+
+  @Query(() => [ TransactionType ], { nullable: true })
+  async transactionTypeList(): Promise<TransactionType[]> {
+    return await TransactionType.find();
   }
 }

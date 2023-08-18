@@ -104,6 +104,7 @@ export const Index: FC = () => {
               <Button onClick={handleEditClick}>Edit</Button>
             )}
             {editBalance && (
+              // TODO - Create this into a component
               <Formik
                 initialValues={{ balance }}
                 onSubmit={async (values, { setErrors }): Promise<void> => {
