@@ -39,7 +39,7 @@ export class TransactionResolver {
     });
     const account = new AccountResolver();
     const accountInput = new AccountUpdateBalanceInput();
-    accountInput.balance = parseFloat(existingAccount.balance.toString()) + amount;
+    accountInput.balance = parseFloat(existingAccount.balance.toString()) + (amount);
     await account.accountUpdateBalance(accountInput, { redis, request, response });
 
     await transaction.save();
@@ -61,13 +61,16 @@ export class TransactionResolver {
         control: [ 'Account Not Found!' ]
       });
     }
-    const existingTransaction = await Transaction.findBy({ accountId: existingAccount.id });
+    const existingTransaction = await Transaction.find({
+      order: {
+        updatedAt: 'DESC'
+      }, where: { accountId: existingAccount.id }
+    });
     if (!existingTransaction) {
       throw new FormError({
         control: [ 'Transaction Not Found!' ]
       });
     }
-
     return existingTransaction;
   }
 }

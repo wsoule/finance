@@ -3,7 +3,6 @@ import { Stat, StatHelpText, StatLabel, StatNumber, Text } from '@chakra-ui/reac
 import { useTransactionTypeDetailsQuery } from '../../generated/graphql';
 import { convertToMoney } from '@finance/core';
 import { Divider } from '@chakra-ui/layout';
-import { MoneyInput } from '@finance/react';
 
 export interface TransactionProps {
   transactionID: string;
@@ -23,10 +22,6 @@ export const Transaction: FC<TransactionProps> = ({
       input: { transactionTypeID: transactionType }
     }
   });
-  const stuff = (value: number | null): void => {
-    console.log(value);
-
-  };
   useEffect(() => {
     setTransactionTypeString(transactionTypeData?.transactionTypeDetails?.transactionType || 'Loading...');
   }, [ transactionTypeData, transactionTypeData?.transactionTypeDetails?.transactionType, transactionTypeFetching ]);
@@ -34,16 +29,19 @@ export const Transaction: FC<TransactionProps> = ({
     <Stat key={transactionID} borderWidth={'1px'} borderRadius={'lg'} padding={2} margin={'2rem'}>
       <StatLabel fontSize={'2xl'}>Transaction Amount</StatLabel>
       <>
-        {!toggleTransactionValue
-          ? (<StatNumber onClick={(): void => {
-            setToggleTransactionValue(!toggleTransactionValue);
-          }} color={transactionAmount > 0 ? 'green.400' : 'red.400'}>
-            {convertToMoney(transactionAmount)}
-          </StatNumber>)
-          : <MoneyInput onBlur={(): void => {
-            setToggleTransactionValue(!toggleTransactionValue);
-          }} autoFocus={true} placeholder={transactionAmount.toFixed(2)} onValueChange={stuff} />
-        }
+        <StatNumber color={transactionAmount > 0 ? 'green.400' : 'red.400'}>
+          {convertToMoney(transactionAmount)}
+        </StatNumber>
+        {/*{!toggleTransactionValue*/}
+        {/*  ? (<StatNumber onClick={(): void => {*/}
+        {/*    setToggleTransactionValue(!toggleTransactionValue);*/}
+        {/*  }} color={transactionAmount > 0 ? 'green.400' : 'red.400'}>*/}
+        {/*    {convertToMoney(transactionAmount)}*/}
+        {/*  </StatNumber>)*/}
+        {/*  : <MoneyInput name={'balance'} onBlur={(): void => {*/}
+        {/*    setToggleTransactionValue(!toggleTransactionValue);*/}
+        {/*  }} autoFocus={true} placeholder={transactionAmount.toFixed(2)} getNumberValue={stuff} />*/}
+        {/*}*/}
       </>
       <StatHelpText>
         <Text fontSize={'xl'}>Transaction Type</Text>

@@ -1,35 +1,12 @@
-import {
-  Button,
-  Heading,
-  Stat,
-  StatHelpText,
-  StatLabel,
-  StatNumber,
-  Text,
-  useToast
-} from '@chakra-ui/react';
+import { Button, Heading, Stat, StatHelpText, StatLabel, StatNumber, Text, useToast } from '@chakra-ui/react';
 import { convertToMoney } from '@finance/core';
-import {
-  handleFormErrorMessages,
-  Link,
-  MoneyInputField
-} from '@finance/react';
-import {
-  Form,
-  Formik
-} from 'formik';
+import { handleFormErrorMessages, Link, Loading, MoneyInputField } from '@finance/react';
+import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
-import {
-  FC,
-  useEffect,
-  useState
-} from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Page } from '../components';
-import {
-  useAccountDetailsQuery,
-  useAccountUpdateBalanceMutation,
-  useUserDetailsQuery
-} from '../generated/graphql';
+import { useAccountDetailsQuery, useAccountUpdateBalanceMutation, useUserDetailsQuery } from '../generated/graphql';
+import styles from './app.module.scss';
 
 export const Index: FC = () => {
   const [ { data: accountData, fetching: accountDetailsFetching } ] = useAccountDetailsQuery();
@@ -59,20 +36,19 @@ export const Index: FC = () => {
     }) : 'no date available');
   };
 
-
   const handleAmountChange = (value: number | null): void => {
     setStateBalance(value);
   };
   useEffect(() => {
     if (userDetailsFetching || accountDetailsFetching) {
-      setMainPageFormat(<Heading>Loading...</Heading>);
+      setMainPageFormat(<Loading isLoading={true} />);
     } else if (!username) {
-      const openRegisterPage = (): void => {
-        router.push('/register');
+      const openRegisterPage = async (): Promise<void> => {
+        await router.push(`/register${router.asPath}`);
       };
 
-      const openLoginPage = (): void => {
-        router.push(`/login${router.asPath}`);
+      const openLoginPage = async (): Promise<void> => {
+        await router.push(`/login${router.asPath}`);
       };
       setMainPageFormat(
         <>
@@ -104,7 +80,6 @@ export const Index: FC = () => {
               <Button onClick={handleEditClick}>Edit</Button>
             )}
             {editBalance && (
-              // TODO - Create this into a component
               <Formik
                 initialValues={{ balance }}
                 onSubmit={async (values, { setErrors }): Promise<void> => {
@@ -128,10 +103,14 @@ export const Index: FC = () => {
                   setEditBalance(!editBalance);
                 }}
               >{({ isSubmitting }): JSX.Element => (
-                  <Form>
-                    <MoneyInputField name='balance' label='Update balance' value={stateBalance ?? balance}
+                  <Form className={styles.spacedRows}>
+                    <MoneyInputField
+                      name='balance'
+                      label='Update balance'
+                      value={stateBalance || ''}
                       placeholder={balance.toFixed(2).toLocaleString()}
-                      onValueChange={handleAmountChange} />
+                      getNumberValue={handleAmountChange}
+                    />
                     <Button isLoading={isSubmitting} type='submit' colorScheme='green'>&#10003;</Button>
                     <Button type='reset' colorScheme='red'>&#10005;</Button>
                   </Form>

@@ -1,6 +1,6 @@
 import { Form, Formik } from 'formik';
 import { render } from '@testing-library/react';
-import { MoneyInputField } from './money-input';
+import { MoneyInputField } from './money-input-field';
 
 describe('MoneyInput', () => {
   it('should render successfully', () => {
@@ -12,7 +12,7 @@ describe('MoneyInput', () => {
         console.log(values);
       }}>
         <Form>
-          <MoneyInputField name='defaultInput' onValueChange={handleChange} label='defaultInput' />
+          <MoneyInputField name='defaultInput' getNumberValue={handleChange} label='defaultInput' />
         </Form>
       </Formik>
     );

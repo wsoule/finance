@@ -1,4 +1,7 @@
-import { BaseError, ErrorCode } from './base-error';
+import {
+  BaseError,
+  ErrorCode
+} from './base-error';
 import { FormErrorMessages } from '@finance/core';
 
 export class FormError extends BaseError {

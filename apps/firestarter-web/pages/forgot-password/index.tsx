@@ -2,17 +2,15 @@ import { Button, Stack, useToast } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
-
 import { Page } from '../../components';
-import { InputField, handleFormErrorMessages } from '@finance/react';
+import { handleFormErrorMessages, InputField } from '@finance/react';
 import { useUserForgotPasswordMutation } from '../../generated/graphql';
 import { useUnauthenticatedGuard } from '../../guards';
-import _styles from './index.module.scss';
 import appStyles from '../app.module.scss';
 
 const forgotPasswordGuards = [ useUnauthenticatedGuard ];
 
-export const ForgotPassword: FC = () => {
+export const ForgotPasswordPage: FC = () => {
   const [ , userForgotPassword ] = useUserForgotPasswordMutation();
   const router = useRouter();
   const toast = useToast();
@@ -22,7 +20,7 @@ export const ForgotPassword: FC = () => {
     <Page guards={guardResults} size='medium'>
       <Formik
         initialValues={{ username: '' }}
-        onSubmit={async ( values, { setErrors }): Promise<void> => {
+        onSubmit={async (values, { setErrors }): Promise<void> => {
           const response = await userForgotPassword({ input: values });
           if (handleFormErrorMessages(response, setErrors, toast)) {
             toast({
@@ -31,7 +29,7 @@ export const ForgotPassword: FC = () => {
               status: 'success',
               title: 'Email sent.'
             });
-            router.push('/login');
+            await router.push('/login');
           }
         }}
       >{({ isSubmitting }): JSX.Element => (
@@ -47,4 +45,4 @@ export const ForgotPassword: FC = () => {
   );
 };
 
-export default ForgotPassword;
+export default ForgotPasswordPage;

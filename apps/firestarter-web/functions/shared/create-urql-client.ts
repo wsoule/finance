@@ -1,24 +1,10 @@
-import {
-  cacheExchange,
-  Cache,
-  QueryInput
-} from '@urql/exchange-graphcache';
-
-import {
-  Client,
-  createClient,
-  fetchExchange
-} from 'urql';
+import { Cache, cacheExchange, QueryInput } from '@urql/exchange-graphcache';
+import { Client, createClient, fetchExchange } from 'urql';
 import { environment } from '../../environments';
 import {
-  AccountDetailsDocument,
-  AccountDetailsQuery,
-  AccountUpdateBalanceMutation,
-  UserCreateMutation,
-  UserDetailsDocument,
-  UserDetailsQuery,
-  UserLoginMutation,
-  UserLogoutMutation
+  AccountDetailsDocument, AccountDetailsQuery, AccountUpdateBalanceMutation, TransactionCreateMutation,
+  TransactionDetailsDocument, TransactionDetailsQuery, UserCreateMutation, UserDetailsDocument, UserDetailsQuery,
+  UserLoginMutation, UserLogoutMutation
 } from '../../generated/graphql';
 import { authenticationErrorExchange } from '../exchanges/authentication-error-exchange';
 
@@ -31,15 +17,14 @@ function updateQuery<ResultT, QueryT>(
   cache.updateQuery(queryInput, (query) => updateCallback(result, query as any) as any);
 }
 
-export function  createUrqlClient(): Client {
+export function createUrqlClient(): Client {
 
-  return  createClient({
+  return createClient({
     url: `${environment.apiUrl}/graphql`,
     exchanges: [
       cacheExchange({
         updates: {
           Mutation: {
-
             userCreate: (result, _args, cache, _info) => {
               // Update userDetails when userCreate is called.
               updateQuery<UserCreateMutation, UserDetailsQuery>(
@@ -79,7 +64,7 @@ export function  createUrqlClient(): Client {
                 });
             },
             accountUpdateBalance: (result, _args, cache, _info) => {
-              // Update accountDetails when accountUpdateBalance is called.
+              // Update accountDetails cache when accountUpdateBalance is called.
               updateQuery<AccountUpdateBalanceMutation, AccountDetailsQuery>(
                 cache,
                 { query: AccountDetailsDocument },
@@ -89,6 +74,30 @@ export function  createUrqlClient(): Client {
                     accountDetails: accountBalanceResult.accountUpdateBalance
                   };
                 });
+            },
+            transactionCreate: (result, _args, cache, _info) => {
+              // updates transactionDetailsQuery cache when transactionCreate is called.
+              updateQuery<TransactionCreateMutation, TransactionDetailsQuery>(
+                cache,
+                { query: TransactionDetailsDocument },
+                result,
+                (transactionDetailsResult, oldTransactionDetails) => {
+                  return {
+                    transactionDetails: [ transactionDetailsResult.transactionCreate, ...oldTransactionDetails.transactionDetails ]
+                  };
+                }
+              );
+              // update Accountbalance cache when transactionCreate is called.
+              updateQuery<AccountUpdateBalanceMutation, AccountDetailsQuery>(
+                cache,
+                { query: AccountDetailsDocument },
+                result,
+                (acountDetails, _oldAccountDetails) => {
+                  return {
+                    accountDetails: acountDetails.accountUpdateBalance
+                  };
+                }
+              );
             }
           }
         }

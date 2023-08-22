@@ -84,17 +84,17 @@ export const NavBar: FC<NavBarProps> = ({ size }) => {
         </Stack>
         <Stack direction='row' spacing='0.5em'>
           <Button onClick={toggleColorMode} rounded='25%' variant={'ghost'}>
-            {colorMode === 'light' ? <MoonIcon/> : <SunIcon/>}
+            {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
           </Button>
           <Menu>
-            <MenuButton as={Button} leftIcon={<SettingsIcon/>} variant='ghost'>
+            <MenuButton as={Button} leftIcon={<SettingsIcon />} variant='ghost'>
               Profile
             </MenuButton>
             {profileMenuList}
           </Menu>
         </Stack>
       </Stack>
-      <Divider/>
+      <Divider />
     </Stack>
   );
 };

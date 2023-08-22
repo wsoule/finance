@@ -1,6 +1,5 @@
 import { Field, InputType } from 'type-graphql';
-import { extendValidation, ControlValidators, FormGroupValidation } from '@finance/core';
-
+import { ControlValidators, extendValidation, FormGroupValidation } from '@finance/core';
 import { UserLoginInput } from './user-login-input';
 
 @InputType()
@@ -12,13 +11,10 @@ export class UserCreateInput extends UserLoginInput {
   protected getValidation(): FormGroupValidation<UserCreateInput> | null {
     return extendValidation(super.getValidation(), {
       children: {
-        email: ControlValidators.string('Email', {
+        email: ControlValidators.string('email', {
           email: true,
           maxlength: 100,
           required: true
-        }),
-        username: ControlValidators.string('Username', {
-          pattern: /^[^@]*$/
         })
       }
     });

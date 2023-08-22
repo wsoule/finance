@@ -1,5 +1,5 @@
 query TransactionDetails {
-  transactionDetails {
-    ...TransactionDetails
-  }
+    transactionDetails {
+        ...TransactionDetails
+    }
 }

@@ -1,32 +1,11 @@
-import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel
-} from '@chakra-ui/form-control';
-import {
-  Input,
-  InputProps
-} from '@chakra-ui/input';
-import {
-  ViewIcon,
-  ViewOffIcon
-} from '@chakra-ui/icons';
-import {
-  Button,
-  InputGroup,
-  InputRightElement
-} from '@chakra-ui/react';
+import { FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/form-control';
+import { Input, InputProps } from '@chakra-ui/input';
+import { Button, InputGroup, InputRightElement } from '@chakra-ui/react';
 import { ComponentWithAs } from '@chakra-ui/system';
-import {
-  Textarea,
-  TextareaProps
-} from '@chakra-ui/textarea';
+import { Textarea, TextareaProps } from '@chakra-ui/textarea';
 import { useField } from 'formik';
-import {
-  FC,
-  InputHTMLAttributes,
-  useState
-} from 'react';
+import { FC, InputHTMLAttributes, useState } from 'react';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -68,7 +47,7 @@ export const InputField: FC<InputFieldProps | TextareaFieldProps> = ({
     <FormControl isInvalid={!!fieldError && touched}>
       <FormLabel htmlFor={field.name}>{label}</FormLabel>
       <InputGroup size='md'>
-        <Control {...field} {...props} type={(showPassword && !textarea) ? 'text' : 'password'} id={field.name} />
+        <Control {...field} {...props} type={(showPassword && !textarea) ? 'text' : 'password'} />
         {ispassword && !textarea && (
           <InputRightElement>
             <Button size='sm' onMouseDown={handleShowPassword} onMouseUp={handleShowPassword}>
