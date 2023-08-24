@@ -1,9 +1,9 @@
-import { FC, SelectHTMLAttributes } from 'react';
+import { FC } from 'react';
 import { useField } from 'formik';
 import { FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/form-control';
-import { Select } from '@chakra-ui/react';
+import { Select, SelectProps } from '@chakra-ui/react';
 
-export interface SelectFormInputProps extends SelectHTMLAttributes<HTMLSelectElement> {
+export interface SelectFormInputProps extends SelectProps {//SelectHTMLAttributes<HTMLSelectElement> {
   name: string;
   label?: string;
 }
@@ -22,11 +22,12 @@ export const SelectFormInput: FC<SelectFormInputProps> = ({
   children,
   label,
   name,
+  mb,
   ...props
 }) => {
   const [ field, { touched, error: fieldError } ] = useField(name);
   return (
-    <FormControl isInvalid={!!fieldError && touched}>
+    <FormControl isInvalid={!!fieldError && touched} mb={mb}>
       <FormLabel htmlFor={field.name}>{label}</FormLabel>
       <Select {...field} {...props} name={field.name}>
         {children}

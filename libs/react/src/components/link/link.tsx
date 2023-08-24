@@ -7,7 +7,13 @@ export interface LinkProps extends ChakraLinkProps {
   route: string;
 }
 
-export const Link: FC<LinkProps> = ({ label, children, route, ...props }) => {
+export const Link: FC<LinkProps> = ({
+  children,
+  href,
+  label,
+  route,
+  ...props
+}) => {
   return (
     <ChakraLink as={NextLink} aria-label={label} href={route} {...props}>{
       children ?? label

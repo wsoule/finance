@@ -87,14 +87,15 @@ export function createUrqlClient(): Client {
                   };
                 }
               );
+              // TODO - fix this, is not updating accountbalance 
               // update Accountbalance cache when transactionCreate is called.
               updateQuery<AccountUpdateBalanceMutation, AccountDetailsQuery>(
                 cache,
                 { query: AccountDetailsDocument },
                 result,
-                (acountDetails, _oldAccountDetails) => {
+                (accountDetails, _oldAccountDetails) => {
                   return {
-                    accountDetails: acountDetails.accountUpdateBalance
+                    accountDetails: accountDetails.accountUpdateBalance
                   };
                 }
               );

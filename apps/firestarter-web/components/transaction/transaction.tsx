@@ -16,7 +16,6 @@ export const Transaction: FC<TransactionProps> = ({
   transactionAmount
 }) => {
   const [ transactionTypeString, setTransactionTypeString ] = useState<null | string>(null);
-  const [ toggleTransactionValue, setToggleTransactionValue ] = useState<boolean>(false);
   const [ { data: transactionTypeData, fetching: transactionTypeFetching } ] = useTransactionTypeDetailsQuery({
     variables: {
       input: { transactionTypeID: transactionType }

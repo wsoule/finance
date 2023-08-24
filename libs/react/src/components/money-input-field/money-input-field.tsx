@@ -5,12 +5,10 @@ import { useField } from 'formik';
 import { InputFieldProps } from '../input-field';
 import { ChangeEvent, FC, useState } from 'react';
 
-export interface MoneyInputFieldProps extends Omit<InputFieldProps, 'ispassword' | 'textarea'> {
+export interface MoneyInputFieldProps extends Omit<InputFieldProps, 'ispassword' | 'textarea' | 'as'> {
   /**Provide a handle function to turn the @value into a number/*/
   getNumberValue?: (value: number | null) => void;
 }
-
-export type MoneyInputProps = MoneyInputFieldProps;
 
 /**
  * Input that shows the value as money.
@@ -21,7 +19,7 @@ export type MoneyInputProps = MoneyInputFieldProps;
  * @param props All of the other props of Input type.
  * @constructor
  */
-export const MoneyInputField: FC<MoneyInputProps> = ({
+export const MoneyInputField: FC<MoneyInputFieldProps> = ({
   error,
   getNumberValue,
   label,
@@ -30,15 +28,17 @@ export const MoneyInputField: FC<MoneyInputProps> = ({
   ...props
 }) => {
   // TODO - fix error where you have to enter a value in order to have a negative value
-  const [ field, { touched, error: fieldError } ] = useField(props);
+  const [ field, { touched, error: fieldError } ] = useField(props.name);
   const [ formattedValue, setFormattedValue ] = useState<string>('');
   const dollarColor = useColorModeValue('gray', 'gray.500');
   const updateInput = (event: ChangeEvent<HTMLInputElement>): void => {
-    const eventTarget2 = event.target.value;
-    const numberValue = ((eventTarget2[eventTarget2.length - 1] === '-') ? -1 : 1) * parseFloat(eventTarget2.replace(/,/g, ''));
-    const StringDecimalValue = numberValue.toLocaleString() + ((eventTarget2.match(/(\.0*)(?!\d)/)?.[1]) ?? '');
-    if (StringDecimalValue.match(/^-?(?:\d{1,3}(?:,\d{3})*(?:\.\d{0,2})?)?$/)) {
-      setFormattedValue(StringDecimalValue);
+    const eventTarget = event.target.value;
+    const numberValue = ((eventTarget[eventTarget.length - 1] === '-') ? -1 : 1) * parseFloat(eventTarget.replace(/,/g, ''));
+    const stringDecimalValue = (eventTarget === '-' && eventTarget.length === 1)
+      ? eventTarget
+      : (numberValue.toLocaleString() + ((eventTarget.match(/(\.0*)(?!\d)/)?.[1]) ?? ''));
+    if (stringDecimalValue.match(/^-?(?:\d{1,3}(?:,\d{3})*(?:\.\d{0,2})?)?$/)) {
+      setFormattedValue(stringDecimalValue);
       if (getNumberValue) {
         getNumberValue(numberValue);
       }
