@@ -4,11 +4,7 @@ import { v4 } from 'uuid';
 import { User } from '../entities';
 import { AppContext, RedisKey } from '../types';
 import {
-  UserChangePasswordInput,
-  UserChangePasswordTokenCheckInput,
-  UserCreateInput,
-  UserForgotPasswordInput,
-  UserLoginInput
+  UserChangePasswordInput, UserChangePasswordTokenCheckInput, UserCreateInput, UserForgotPasswordInput, UserLoginInput
 } from './types';
 import { environment } from '../environments';
 import { FormError, sendEmail, Time } from '@finance/node';
@@ -41,7 +37,7 @@ export class UserResolver {
     });
 
     // log user in
-    request.session.userId = user.id;
+    request.session.userID = user.id;
 
     await redis.del(`${RedisKey.forgotPassword}:${token}`);
     await sendEmail({
@@ -99,7 +95,7 @@ export class UserResolver {
     });
     await user.save();
 
-    request.session.userId = user.id;
+    request.session.userID = user.id;
 
     const account = new AccountResolver();
     await account.accountCreate({ request, redis, response });
@@ -111,8 +107,8 @@ export class UserResolver {
   async userDetails(
     @Ctx() { request }: AppContext
   ): Promise<User | null> {
-    const { userId } = request.session;
-    return (!userId) ? null : User.findOneBy({ id: userId });
+    const { userID } = request.session;
+    return (!userID) ? null : User.findOneBy({ id: userID });
   }
 
   @Mutation(() => Boolean)
@@ -168,7 +164,7 @@ export class UserResolver {
         control: [ 'Invalid username or password' ]
       });
     }
-    request.session.userId = existingUser.id;
+    request.session.userID = existingUser.id;
 
     return existingUser;
   }

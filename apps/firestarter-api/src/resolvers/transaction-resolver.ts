@@ -2,7 +2,7 @@ import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { Account, Transaction, TransactionType } from '../entities';
 import { AppContext } from '../types';
 import { AuthenticationError, FormError } from '@finance/node';
-import { AccountUpdateBalanceInput, TransactionInput } from './types/';
+import { AccountUpdateBalanceInput, TransactionFindInput, TransactionInput } from './types/';
 import { AccountResolver } from './account-resolver';
 
 @Resolver()
@@ -14,12 +14,12 @@ export class TransactionResolver {
   ): Promise<Transaction> {
     input.throwIfInvalid();
     const { amount, transactionType } = input;
-    const { userId } = request.session;
-    if (!userId) {
+    const { userID } = request.session;
+    if (!userID) {
       throw new AuthenticationError('Must Be Logged In to Create Transaction');
     }
 
-    const existingAccount = await Account.findOneBy({ userId });
+    const existingAccount = await Account.findOneBy({ userID });
     if (!existingAccount) {
       throw new FormError({
         control: [ 'Account Not Found!' ]
@@ -47,15 +47,48 @@ export class TransactionResolver {
     return transaction;
   }
 
+  @Mutation(() => Transaction)
+  async transactionDelete(
+    @Arg('input') input: TransactionFindInput,
+    @Ctx() { request, redis, response }: AppContext
+  ): Promise<Transaction> {
+    input.throwIfInvalid();
+    const { userID } = request.session;
+    const existingTransaction = await Transaction.findOneBy({ id: input.transactionID });
+    if (!existingTransaction) {
+      throw new FormError({
+        control: [ `Cannot Find Transaction ID: ${input.transactionID}` ]
+      });
+    }
+    if (!userID) {
+      throw new AuthenticationError('Must Be Logged In to Create Transaction');
+    }
+
+    const existingAccount = await Account.findOneBy({ userID });
+    if (!existingAccount) {
+      throw new FormError({
+        control: [ 'Account Not Found!' ]
+      });
+    }
+
+    const account = new AccountResolver();
+    const accountUpdateInput = new AccountUpdateBalanceInput();
+    accountUpdateInput.balance = existingAccount.balance - (existingTransaction.amount);
+    await account.accountUpdateBalance(accountUpdateInput, { redis, request, response });
+
+    await Transaction.delete({ id: input.transactionID });
+    return existingTransaction;
+  }
+
   @Query(() => [ Transaction ])
   async transactionDetails(
     @Ctx() { request }: AppContext
   ): Promise<Transaction[]> {
-    const { userId } = request.session;
-    if (!userId) {
+    const { userID } = request.session;
+    if (!userID) {
       throw new AuthenticationError('Must Be Logged In To Get Transaction');
     }
-    const existingAccount = await Account.findOneBy({ userId });
+    const existingAccount = await Account.findOneBy({ userID });
     if (!existingAccount) {
       throw new FormError({
         control: [ 'Account Not Found!' ]

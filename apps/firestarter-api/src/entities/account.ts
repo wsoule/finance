@@ -1,12 +1,6 @@
 import { Ctx, Field, ObjectType } from 'type-graphql';
 import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn
+  BaseEntity, Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn
 } from 'typeorm';
 import { User } from './user';
 import { AppContext } from '../types';
@@ -25,7 +19,7 @@ export class Account extends BaseEntity {
   @Column()
   @OneToOne(() => User)
   @Field()
-  userId!: string;
+  userID!: string;
 
   /** Balance of a user's account. */
   @Column(MoneyColumnType)
@@ -46,6 +40,6 @@ export class Account extends BaseEntity {
   balanceField(
     @Ctx() { request }: AppContext
   ): number {
-    return (request.session.userId === this.userId) ? this.balance : 0;
+    return (request.session.userID === this.userID) ? this.balance : 0;
   }
 }

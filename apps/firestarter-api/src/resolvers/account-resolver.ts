@@ -11,13 +11,13 @@ export class AccountResolver {
   async accountCreate(
     @Ctx() { request }: AppContext
   ): Promise<Account> {
-    const { userId } = request.session;
-    if (!userId) {
+    const { userID } = request.session;
+    if (!userID) {
       throw new AuthenticationError('You Must Be Logged In To Create Account');
     }
     const [ existingAccount, existingUser ] = await Promise.all([
-      Account.findOneBy({ userId }),
-      User.findOneBy({ id: userId })
+      Account.findOneBy({ userID }),
+      User.findOneBy({ id: userID })
     ]);
     if (existingAccount) {
       throw new FormError({
@@ -30,7 +30,7 @@ export class AccountResolver {
     }
     const account = Account.create({
       balance: 0,
-      userId: userId
+      userID
     });
 
     await account.save();
@@ -43,12 +43,12 @@ export class AccountResolver {
   async accountDetails(
     @Ctx() { request }: AppContext
   ): Promise<Account | null> {
-    const { userId } = request.session;
-    if (!userId) {
+    const { userID } = request.session;
+    if (!userID) {
       return null;
       // throw new AuthenticationError('You Must Be Logged In To Access Account!');
     }
-    const existingAccount = await Account.findOneBy({ userId });
+    const existingAccount = await Account.findOneBy({ userID });
     if (!existingAccount) {
       throw new FormError({
         control: [ 'Account Not Found!' ]
@@ -66,22 +66,22 @@ export class AccountResolver {
   ): Promise<Account> {
     input.throwIfInvalid();
     const { balance } = input;
-    const { userId } = request.session;
-    if (!userId) {
+    const { userID } = request.session;
+    if (!userID) {
       throw new AuthenticationError('You must Be Logged In Update Account!');
     }
-    let account = await Account.findOneBy({ userId });
+    let account = await Account.findOneBy({ userID });
     if (!account) {
       throw new FormError({
         control: [ 'Account Not Found!' ]
       });
     }
     await Account.update({
-      userId
+      userID
     }, {
       balance
     });
-    account = await Account.findOneBy({ userId }) ?? account;
+    account = await Account.findOneBy({ userID }) ?? account;
 
     return account;
   }
