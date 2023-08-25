@@ -3,7 +3,7 @@ import { default as NextLink } from 'next/link';
 import { FC } from 'react';
 
 export interface LinkProps extends ChakraLinkProps {
-  label: string;
+  label?: string;
   route: string;
 }
 

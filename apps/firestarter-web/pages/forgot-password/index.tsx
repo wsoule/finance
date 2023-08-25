@@ -6,7 +6,6 @@ import { Page } from '../../components';
 import { handleFormErrorMessages, InputField } from '@finance/react';
 import { useUserForgotPasswordMutation } from '../../generated/graphql';
 import { useUnauthenticatedGuard } from '../../guards';
-import appStyles from '../app.module.scss';
 
 const forgotPasswordGuards = [ useUnauthenticatedGuard ];
 
@@ -33,7 +32,7 @@ export const ForgotPasswordPage: FC = () => {
           }
         }}
       >{({ isSubmitting }): JSX.Element => (
-          <Form className={appStyles.spacedRows}>
+          <Form className={'spacedRows'}>
             <InputField label='Username' name='username' placeholder='username' />
             <Stack direction={'row'} justifyContent={'end'} spacing={'1rem'}>
               <Button isLoading={isSubmitting} type={'submit'}>Request Password Reseet</Button>

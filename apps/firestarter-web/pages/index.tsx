@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
 import { Page } from '../components';
 import { useAccountDetailsQuery, useAccountUpdateBalanceMutation, useUserDetailsQuery } from '../generated/graphql';
-import styles from './app.module.scss';
+import './_app';
 
 export const Index: FC = () => {
   const [ { data: accountData, fetching: accountDetailsFetching } ] = useAccountDetailsQuery();
@@ -103,7 +103,7 @@ export const Index: FC = () => {
                   setEditBalance(!editBalance);
                 }}
               >{({ isSubmitting }): JSX.Element => (
-                  <Form className={styles.spacedRows}>
+                  <Form className={'spacedRows'}>
                     <MoneyInputField
                       name='balance'
                       label='Update balance'

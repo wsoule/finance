@@ -30,7 +30,8 @@ export const TransactionAdd: FC<TransactionAddProps> = ({
         return (
           <option
             key={transactionType.id}
-            value={transactionType.transactionType}>
+            value={transactionType.transactionType}
+          >
             {transactionType.transactionType}
           </option>
         );

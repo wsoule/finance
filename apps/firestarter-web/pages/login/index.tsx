@@ -5,7 +5,6 @@ import { useUserLoginMutation } from '../../generated/graphql';
 import { handleFormErrorMessages, InputField, Link } from '@finance/react';
 import { Page } from '../../components';
 import { useUnauthenticatedGuard } from '../../guards';
-import appStyles from '../app.module.scss';
 
 export interface LoginFormValues {
   username: string;
@@ -38,7 +37,7 @@ export const LoginPage: FC = () => {
             }
           }}
         >{({ isSubmitting }): JSX.Element => (
-            <Form className={appStyles.spacedRows}>
+            <Form className={'spacedRows'}>
               <InputField autoFocus label='Username' name='username' placeholder='username' />
               <InputField label='Password' name='password' placeholder='password' type='password' ispassword />
               <Stack direction='row' justifyContent='center' spacing='1rem'>

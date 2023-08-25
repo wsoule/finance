@@ -3,18 +3,25 @@ import { Stat, StatHelpText, StatLabel, StatNumber, Text } from '@chakra-ui/reac
 import { useTransactionTypeDetailsQuery } from '../../generated/graphql';
 import { convertToMoney } from '@finance/core';
 import { Divider } from '@chakra-ui/layout';
+import { Link } from '@finance/react';
+import { useRouter } from 'next/router';
+import { LinkIcon } from '@chakra-ui/icons';
+import styles from './transaction.module.scss';
 
 export interface TransactionProps {
+  index: number;
   transactionID: string;
   transactionType: number;
   transactionAmount: number;
 }
 
 export const Transaction: FC<TransactionProps> = ({
+  index,
   transactionID,
   transactionType,
   transactionAmount
 }) => {
+  const router = useRouter();
   const [ transactionTypeString, setTransactionTypeString ] = useState<null | string>(null);
   const [ { data: transactionTypeData, fetching: transactionTypeFetching } ] = useTransactionTypeDetailsQuery({
     variables: {
@@ -25,8 +32,10 @@ export const Transaction: FC<TransactionProps> = ({
     setTransactionTypeString(transactionTypeData?.transactionTypeDetails?.transactionType || 'Loading...');
   }, [ transactionTypeData, transactionTypeData?.transactionTypeDetails?.transactionType, transactionTypeFetching ]);
   return (
-    <Stat key={transactionID} borderWidth={'1px'} borderRadius={'lg'} padding={2} margin={'2rem'}>
-      <StatLabel fontSize={'2xl'}>Transaction Amount</StatLabel>
+    <Stat key={transactionID} id={transactionID} borderWidth={'1px'} borderRadius={'lg'} padding={2} margin={'2rem'}>
+      <Link className={styles.link} route={`${router.basePath}#${transactionID}`}>
+        <LinkIcon mr={2} underlinePosition={'center'} /><StatLabel fontSize={'2xl'}>Transaction #{index}</StatLabel>
+      </Link>
       <>
         <StatNumber color={transactionAmount > 0 ? 'green.400' : 'red.400'}>
           {convertToMoney(transactionAmount)}
@@ -43,11 +52,12 @@ export const Transaction: FC<TransactionProps> = ({
         {/*}*/}
       </>
       <StatHelpText>
+
         <Text fontSize={'xl'}>Transaction Type</Text>
         <Text fontSize={'xl'} mb={2}>{transactionTypeString}</Text>
         <Divider />
         <Text mt={2} fontWeight={'bold'}>TransactionID</Text>
-        <Text>{transactionID}</Text>
+        {transactionID}
       </StatHelpText>
     </Stat>
   );

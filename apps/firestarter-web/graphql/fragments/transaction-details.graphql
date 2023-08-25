@@ -1,6 +1,6 @@
 fragment TransactionDetails on Transaction {
-  amount
-  updatedAt
-  id
-  transactionTypeID
+    amount
+    updatedAt
+    id
+    transactionTypeID
 }

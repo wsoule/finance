@@ -1,15 +1,18 @@
 import { FC, useEffect, useState } from 'react';
 import { Page } from '../../components';
 import { useTransactionDetailsQuery } from '../../generated/graphql';
-import { Button, Heading, Text, useDisclosure } from '@chakra-ui/react';
+import { Button, Heading, Text } from '@chakra-ui/react';
 import { useAuthenticatedGuard } from '../../guards';
 import { Transaction, TransactionAdd } from '../../components/';
 import { Loading } from '@finance/react';
+import { useRouter } from 'next/router';
 
 const loggedInGuards = [ useAuthenticatedGuard ];
 
 export const TransactionsPage: FC = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
+  const showModal = router.query['create-transaction'];
+  console.log(showModal);
   const [ { data: transactionData, fetching: transactionsFetching } ] = useTransactionDetailsQuery();
   const [ transactionPageContents, setTransactionPageContents ] = useState<JSX.Element | JSX.Element[]>();
   const routeGuards = loggedInGuards.map((guard) => guard());
@@ -22,9 +25,10 @@ export const TransactionsPage: FC = () => {
     } else if (!transactionData || transactionData.transactionDetails.length < 1) {
       setTransactionPageContents(<Text>NO TRANSACTION DATA</Text>);
     } else {
-      setTransactionPageContents(transactionData.transactionDetails.map((transactionDetails) => {
+      setTransactionPageContents(transactionData.transactionDetails.map((transactionDetails, index) => {
         return (
           <Transaction
+            index={transactionData.transactionDetails.length - index}
             key={transactionDetails.id}
             transactionAmount={transactionDetails.amount}
             transactionID={transactionDetails.id}
@@ -42,8 +46,12 @@ export const TransactionsPage: FC = () => {
         <Page size={'large'} guards={routeGuards}>
           <Heading>Transactions</Heading>
           <div>
-            <Button onClick={onOpen}>Create Transaction</Button>
-            <TransactionAdd isOpen={isOpen} onClose={onClose} />
+            <Button mt={3} onClick={async (): Promise<void> => {
+              await router.push(`${router.basePath}?create-transaction=true`);
+            }}>Create Transaction</Button>
+            <TransactionAdd isOpen={!!showModal} onClose={async (): Promise<void> => {
+              await router.push(router.basePath);
+            }} />
             {transactionPageContents}
           </div>
         </Page>

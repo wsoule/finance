@@ -6,7 +6,6 @@ import { Page } from '../../components';
 import { useUnauthenticatedGuard } from '../../guards';
 import { useUserCreateMutation } from '../../generated/graphql';
 import { handleFormErrorMessages, InputField, Link } from '@finance/react';
-import appStyles from '../app.module.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RegisterProps {
@@ -48,12 +47,12 @@ export const RegisterPage: FC<RegisterProps> = () => {
             }
           }}
         >{({ isSubmitting }): JSX.Element => (
-            <Form className={appStyles.spacedRows}>
-              <InputField autoFocus label='Username' name='username'/>
-              <InputField label='Email' name='email' type='email'/>
-              <InputField label='Password' name='password' type='password' ispassword/>
+            <Form className={'spacedRows'}>
+              <InputField autoFocus label='Username' name='username' />
+              <InputField label='Email' name='email' type='email' />
+              <InputField label='Password' name='password' type='password' ispassword />
               <Stack direction='row' justifyContent='center' spacing='1rem'>
-                <Link label='Already have account?' route='/login'/>
+                <Link label='Already have account?' route='/login' />
               </Stack>
               <Stack direction='row' justifyContent='end' spacing='1rem'>
                 <Button colorScheme='red' isLoading={isSubmitting} type='submit'>

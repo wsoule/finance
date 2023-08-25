@@ -2,7 +2,7 @@ import { AppProps } from 'next/app';
 import { Provider as UrlqlProvider } from 'urql';
 import { ChakraProvider } from '@chakra-ui/react';
 import { createUrqlClient } from '../functions/shared/create-urql-client';
-import './app.module.scss';
+import './app.css';
 import { theme } from '@finance/react';
 import { FC } from 'react';
 

@@ -4,7 +4,6 @@ import { NextPage } from 'next';
 import { useChangePasswordGuard } from '../../../guards';
 import { useUserChangePasswordMutation } from '../../../generated/graphql';
 import { Page } from '../../../components';
-import appStyles from '../../app.module.scss';
 import { Form, Formik } from 'formik';
 import { handleFormErrorMessages, InputField, toastFormControlError } from '@finance/react';
 
@@ -33,7 +32,7 @@ export const ChangePasswordPage: NextPage = () => {
           }
         }}
       >{({ isSubmitting }): JSX.Element => (
-          <Form className={appStyles.spacedRows}>
+          <Form className={'spacedRows'}>
             <InputField label={'Password'} name={'password'} placeholder={'password'} ispassword={true} />
             <Button isLoading={isSubmitting} type={'submit'}>Change Password</Button>
           </Form>
