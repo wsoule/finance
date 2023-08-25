@@ -8,6 +8,7 @@ import { FC, useEffect, useState } from 'react';
 import { Link, WrapperPropsSize, wrapperSizeToPixels } from '@finance/react';
 import { useUserDetailsQuery, useUserLogoutMutation } from '../../generated/graphql';
 import { useRouter } from 'next/router';
+import styles from './nav-bar.module.scss';
 
 export interface NavBarProps {
   size?: WrapperPropsSize;
@@ -30,10 +31,9 @@ export const NavBar: FC<NavBarProps> = ({ size }) => {
         </MenuList>
       );
     } else if (!username) {
-      const loginRoute = `login${router.asPath}`;
       setProfileMenuList(
         <MenuList>
-          <MenuItem as='a' href={loginRoute}>
+          <MenuItem as='a' href={`login${router.asPath}`}>
             Log in
           </MenuItem>
           <MenuItem as='a' href='/register'>
@@ -82,7 +82,17 @@ export const NavBar: FC<NavBarProps> = ({ size }) => {
             <Heading color={'red.500'}>FireStarter</Heading>
           </Link>
         </Stack>
-        <Stack direction='row' spacing='0.5em'>
+        <Stack direction='row' alignItems={'baseline'} spacing='0.5em'>
+          <Link className={styles.noUnderline} route={'/dashboard'}>
+            <Heading size={'md'} variant={'nav-bar'}>
+              Dashboard
+            </Heading>
+          </Link>
+          <Link className={styles.noUnderline} route={'/transactions'}>
+            <Heading size={'md'} variant={'nav-bar'}>
+              Transactions
+            </Heading>
+          </Link>
           <Button onClick={toggleColorMode} rounded='25%' variant={'ghost'}>
             {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
           </Button>
