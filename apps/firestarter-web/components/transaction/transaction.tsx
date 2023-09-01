@@ -1,12 +1,13 @@
 import { FC, useEffect, useState } from 'react';
-import { Stat, StatHelpText, StatLabel, StatNumber, Text } from '@chakra-ui/react';
-import { useTransactionTypeDetailsQuery } from '../../generated/graphql';
+import { Button, Stat, StatHelpText, StatLabel, StatNumber, Text, useToast } from '@chakra-ui/react';
+import { useTransactionDeleteMutation, useTransactionTypeDetailsQuery } from '../../generated/graphql';
 import { convertToMoney } from '@finance/core';
 import { Divider } from '@chakra-ui/layout';
-import { Link } from '@finance/react';
+import { handleFormErrorMessages, Link } from '@finance/react';
 import { useRouter } from 'next/router';
 import { LinkIcon } from '@chakra-ui/icons';
 import styles from './transaction.module.scss';
+import { Form, Formik } from 'formik';
 
 export interface TransactionProps {
   index: number;
@@ -22,7 +23,11 @@ export const Transaction: FC<TransactionProps> = ({
   transactionAmount
 }) => {
   const router = useRouter();
+  const [ , deleteTransaction ] = useTransactionDeleteMutation();
   const [ transactionTypeString, setTransactionTypeString ] = useState<null | string>(null);
+  const [ transactionDeleteElement, setTransactionDeleteElement ] = useState<JSX.Element>();
+  const [ toggleDeleteForm, setToggleDeleteForm ] = useState<boolean>(false);
+  const toast = useToast();
   const [ { data: transactionTypeData, fetching: transactionTypeFetching } ] = useTransactionTypeDetailsQuery({
     variables: {
       input: { transactionTypeID: transactionType }
@@ -31,6 +36,47 @@ export const Transaction: FC<TransactionProps> = ({
   useEffect(() => {
     setTransactionTypeString(transactionTypeData?.transactionTypeDetails?.transactionType || 'Loading...');
   }, [ transactionTypeData, transactionTypeData?.transactionTypeDetails?.transactionType, transactionTypeFetching ]);
+
+  useEffect(() => {
+    if (toggleDeleteForm) {
+      setTransactionDeleteElement(
+        <>
+          <Formik
+            initialValues={{ transactionID: '' }}
+            onSubmit={async (values, { setErrors }): Promise<void> => {
+              values.transactionID = transactionID;
+              const deleteTransactionResponse = await deleteTransaction({
+                input: values
+              });
+              if (handleFormErrorMessages(deleteTransactionResponse, setErrors, toast)) {
+                toast({
+                  title: 'Deleted Transaction',
+                  description: transactionID,
+                  status: 'success',
+                  isClosable: true
+                });
+                setToggleDeleteForm(!toggleDeleteForm);
+              }
+            }}
+            onReset={(): void => setToggleDeleteForm(!toggleDeleteForm)}
+          >{({ isSubmitting }): JSX.Element => (
+              <Form>
+                <Button mb={2} mr={2} type={'submit'} isLoading={isSubmitting}>Confirm</Button>
+                <Button mb={2} type={'reset'}>Cancel</Button>
+              </Form>
+            )}
+          </Formik>
+        </>
+      );
+    } else {
+      setTransactionDeleteElement(
+        <Button onClick={(): void => {
+          setToggleDeleteForm(!toggleDeleteForm);
+        }}>Delete</Button>
+      );
+    }
+  }, [ deleteTransaction, toast, toggleDeleteForm, transactionID ]);
+
   return (
     <Stat key={transactionID} id={transactionID} borderWidth={'1px'} borderRadius={'lg'} padding={2} margin={'2rem'}>
       <Link className={styles.link} route={`${router.basePath}#${transactionID}`}>
@@ -52,9 +98,9 @@ export const Transaction: FC<TransactionProps> = ({
         {/*}*/}
       </>
       <StatHelpText>
-
         <Text fontSize={'xl'}>Transaction Type</Text>
         <Text fontSize={'xl'} mb={2}>{transactionTypeString}</Text>
+        {transactionDeleteElement}
         <Divider />
         <Text mt={2} fontWeight={'bold'}>TransactionID</Text>
         {transactionID}

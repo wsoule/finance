@@ -3,8 +3,8 @@ import { Client, createClient, fetchExchange } from 'urql';
 import { environment } from '../../environments';
 import {
   AccountDetailsDocument, AccountDetailsQuery, AccountUpdateBalanceMutation, TransactionCreateMutation,
-  TransactionDetailsDocument, TransactionDetailsQuery, UserCreateMutation, UserDetailsDocument, UserDetailsQuery,
-  UserLoginMutation, UserLogoutMutation
+  TransactionDeleteMutation, TransactionDetailsDocument, TransactionDetailsQuery, UserCreateMutation,
+  UserDetailsDocument, UserDetailsQuery, UserLoginMutation, UserLogoutMutation
 } from '../../generated/graphql';
 import { authenticationErrorExchange } from '../exchanges/authentication-error-exchange';
 
@@ -25,6 +25,18 @@ export function createUrqlClient(): Client {
       cacheExchange({
         updates: {
           Mutation: {
+            accountUpdateBalance: (result, _args, cache, _info) => {
+              // Update accountDetails cache when accountUpdateBalance is called.
+              updateQuery<AccountUpdateBalanceMutation, AccountDetailsQuery>(
+                cache,
+                { query: AccountDetailsDocument },
+                result,
+                (accountBalanceResult, _oldAccountDetails) => {
+                  return {
+                    accountDetails: accountBalanceResult.accountUpdateBalance
+                  };
+                });
+            },
             userCreate: (result, _args, cache, _info) => {
               // Update userDetails when userCreate is called.
               updateQuery<UserCreateMutation, UserDetailsQuery>(
@@ -63,18 +75,6 @@ export function createUrqlClient(): Client {
                   };
                 });
             },
-            accountUpdateBalance: (result, _args, cache, _info) => {
-              // Update accountDetails cache when accountUpdateBalance is called.
-              updateQuery<AccountUpdateBalanceMutation, AccountDetailsQuery>(
-                cache,
-                { query: AccountDetailsDocument },
-                result,
-                (accountBalanceResult, _oldAccountDetails) => {
-                  return {
-                    accountDetails: accountBalanceResult.accountUpdateBalance
-                  };
-                });
-            },
             transactionCreate: (result, _args, cache, _info) => {
               // updates transactionDetailsQuery cache when transactionCreate is called.
               updateQuery<TransactionCreateMutation, TransactionDetailsQuery>(
@@ -89,13 +89,34 @@ export function createUrqlClient(): Client {
               );
               // TODO - fix this, is not updating accountbalance 
               // update Accountbalance cache when transactionCreate is called.
-              updateQuery<AccountUpdateBalanceMutation, AccountDetailsQuery>(
+              // updateQuery<AccountUpdateBalanceMutation, AccountDetailsQuery>(
+              //   cache,
+              //   { query: AccountDetailsDocument },
+              //   result,
+              //   (accountDetails, _oldAccountDetails) => {
+              //     return {
+              //       accountDetails: accountDetails.accountUpdateBalance
+              //     };
+              //   }
+              // );
+            },
+            transactionDelete: (result, _args, cache, _info) => {
+              // updates the transactionDetailsQuery when the transactionDelete mutation is called.
+              updateQuery<TransactionDeleteMutation, TransactionDetailsQuery>(
                 cache,
-                { query: AccountDetailsDocument },
+                { query: TransactionDetailsDocument },
                 result,
-                (accountDetails, _oldAccountDetails) => {
+                (_transactionDetailsResult, oldTransactionDetails) => {
+                  // create an array of the oldTransaction details & remove the deleted item
+                  const oldTransactionDetailsArray = oldTransactionDetails.transactionDetails;
+                  const itemToDelete = oldTransactionDetailsArray.findIndex((item) => {
+                    return item.id === _transactionDetailsResult.transactionDelete.id;
+                  });
+                  if (itemToDelete > -1) {
+                    oldTransactionDetailsArray.splice(itemToDelete, 1);
+                  }
                   return {
-                    accountDetails: accountDetails.accountUpdateBalance
+                    transactionDetails: oldTransactionDetailsArray
                   };
                 }
               );

@@ -15,14 +15,14 @@ const headerTheme: SystemStyleInterpolation = defineStyle({
   fontSize: '1rem',
   _light: {
     _hover: {
-      backgroundColor: '#EDF2F7'
+      backgroundColor: 'var(--chakra-colors-gray-100)'
     }
   },
   transition: 'all 200ms',
 
   _dark: {
     _hover: {
-      backgroundColor: 'rgba(255, 255, 255, 0.08)'
+      backgroundColor: 'var(--chakra-colors-whiteAlpha-200)'
     }
   }
 }

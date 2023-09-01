@@ -12,7 +12,6 @@ const loggedInGuards = [ useAuthenticatedGuard ];
 export const TransactionsPage: FC = () => {
   const router = useRouter();
   const showModal = router.query['create-transaction'];
-  console.log(showModal);
   const [ { data: transactionData, fetching: transactionsFetching } ] = useTransactionDetailsQuery();
   const [ transactionPageContents, setTransactionPageContents ] = useState<JSX.Element | JSX.Element[]>();
   const routeGuards = loggedInGuards.map((guard) => guard());

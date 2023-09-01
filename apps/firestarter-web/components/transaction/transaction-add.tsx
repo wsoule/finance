@@ -68,7 +68,6 @@ export const TransactionAdd: FC<TransactionAddProps> = ({
                   onClose();
                 }
               }}
-
             >{({ isSubmitting }): JSX.Element => (
                 <Form className={styles.spacedRows} noValidate>
                   <SelectFormInput mb={3} label={'Transaction Type'} placeholder={'Select Type'} name={'transactionType'}>
