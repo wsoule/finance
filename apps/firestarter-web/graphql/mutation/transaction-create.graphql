@@ -1,5 +1,5 @@
 mutation TransactionCreate ($input: TransactionInput!) {
-  transactionCreate(input: $input) {
-    ...TransactionDetails
-  }
+    transactionCreate(input: $input) {
+        ...TransactionDetails
+    }
 }

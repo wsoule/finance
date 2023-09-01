@@ -4,7 +4,7 @@ import { Redis } from 'ioredis';
 declare module 'express-session' {
   /** Declare additional session properties using [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html). */
   interface SessionData {
-    userId: string;
+    userID: string;
   }
 }
 

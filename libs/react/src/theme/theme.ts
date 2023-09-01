@@ -1,23 +1,36 @@
-import { ThemeConfig, extendTheme, defineStyleConfig, defineStyle } from '@chakra-ui/react';
+import { defineStyle, defineStyleConfig, extendTheme, SystemStyleInterpolation, ThemeConfig } from '@chakra-ui/react';
 
 const config: ThemeConfig = {
   initialColorMode: 'system',
   useSystemColorMode: false
 };
 
-const headerTheme = defineStyle({
-  color: 'yellow.500',
+const headerTheme: SystemStyleInterpolation = defineStyle({
+  alignContent: 'center',
+  alignItems: 'center',
+  borderRadius: '5px',
+  display: 'flex',
+  height: '2rem',
+  padding: '0.5em',
+  fontSize: '1rem',
+  _light: {
+    _hover: {
+      backgroundColor: 'var(--chakra-colors-gray-100)'
+    }
+  },
+  transition: 'all 200ms',
 
   _dark: {
-    color: 'blue.500'
-
+    _hover: {
+      backgroundColor: 'var(--chakra-colors-whiteAlpha-200)'
+    }
   }
 }
 );
 
 const headerDefault = defineStyleConfig({
   variants: {
-    'testing': headerTheme
+    'nav-bar': headerTheme
   }
 });
 

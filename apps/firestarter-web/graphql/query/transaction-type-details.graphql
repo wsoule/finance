@@ -1,0 +1,6 @@
+query TransactionTypeDetails ($input: GetTransactionTypeInput!) {
+  transactionTypeDetails(getTransactionTypeInput: $input) {
+    id
+    transactionType
+  }
+}

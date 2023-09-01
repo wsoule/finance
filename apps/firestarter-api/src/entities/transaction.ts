@@ -1,5 +1,13 @@
 import { Field, ObjectType } from 'type-graphql';
-import { BaseEntity, Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm';
 import { Account } from './account';
 import { MoneyColumnType } from '@finance/node';
 import { TransactionType } from './transaction-type';
@@ -16,7 +24,7 @@ export class Transaction extends BaseEntity {
   @Column()
   @OneToOne(() => TransactionType)
   @Field()
-  transactionTypeId!: number;
+  transactionTypeID!: number;
 
   /** Account number to modify. */
   @Column()
@@ -24,7 +32,7 @@ export class Transaction extends BaseEntity {
   @Field()
   accountId!: string;
 
-  /** Amount to add or subract from @Account */
+  /** Amount to add or subtract from @Account */
   @Column(MoneyColumnType)
   @Field()
   amount!: number;

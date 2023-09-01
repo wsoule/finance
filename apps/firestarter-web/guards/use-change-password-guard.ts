@@ -20,10 +20,10 @@ export const useChangePasswordGuard = (): boolean | null => {
         status: 'error',
         title: 'Invalid token, please request a new one.'
       });
-      router.push('/forgot-password');
+      router.push(`/forgot-password/?=route=${router.asPath}`);
     }
     setSuccess(newSuccess);
-  }, [data, fetching, router]);
+  }, [ data, fetching, router ]);
 
   return success;
 };

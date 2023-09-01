@@ -1,18 +1,15 @@
 import { Button, useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
-
 import { useChangePasswordGuard } from '../../../guards';
 import { useUserChangePasswordMutation } from '../../../generated/graphql';
 import { Page } from '../../../components';
-import _styles from './index.module.scss';
-import appStyles from '../../app.module.scss';
 import { Form, Formik } from 'formik';
-import { InputField, handleFormErrorMessages, toastFormControlError } from '@finance/react';
+import { handleFormErrorMessages, InputField, toastFormControlError } from '@finance/react';
 
 const changePasswordGuards = [ useChangePasswordGuard ];
 
-export const ChangePassword: NextPage = () => {
+export const ChangePasswordPage: NextPage = () => {
   const [ , userChangePassword ] = useUserChangePasswordMutation();
   const router = useRouter();
   const toast = useToast();
@@ -25,17 +22,17 @@ export const ChangePassword: NextPage = () => {
         onSubmit={async (values, { setErrors }): Promise<void> => {
           const response = await userChangePassword({ input: values });
           if (!toastFormControlError(response, toast, 'token', 'Token')) {
-            router.push('/forgot-password');
+            await router.push('/forgot-password');
           } else if (handleFormErrorMessages(response, setErrors, toast)) {
             toast({
               title: 'Password Reset',
               status: 'success'
             });
-            router.push('/login');
+            await router.push('/login');
           }
         }}
       >{({ isSubmitting }): JSX.Element => (
-          <Form className={appStyles.spacedRows}>
+          <Form className={'spacedRows'}>
             <InputField label={'Password'} name={'password'} placeholder={'password'} ispassword={true} />
             <Button isLoading={isSubmitting} type={'submit'}>Change Password</Button>
           </Form>
@@ -45,4 +42,4 @@ export const ChangePassword: NextPage = () => {
   );
 };
 
-export default ChangePassword;
+export default ChangePasswordPage;

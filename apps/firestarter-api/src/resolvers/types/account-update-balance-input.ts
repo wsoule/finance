@@ -4,7 +4,7 @@ import { Field, InputType } from 'type-graphql';
 import { accountBalanceValidation } from './validation';
 
 @InputType()
-export class AccountUpdateBalanceInput extends InputBase{
+export class AccountUpdateBalanceInput extends InputBase {
   @Field()
   balance!: number;
 

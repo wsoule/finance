@@ -1,18 +1,21 @@
 .container {
-  height: 100vh;
   position: relative;
 }
 
 .middleContainer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   width: 100%;
+
+  &.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .spinner {

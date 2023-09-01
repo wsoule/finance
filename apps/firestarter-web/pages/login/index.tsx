@@ -1,13 +1,10 @@
-import { useToast, Button, Stack } from '@chakra-ui/react';
+import { Button, Stack, useToast } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { FC } from 'react';
-import { useRouter } from 'next/router';
-
 import { useUserLoginMutation } from '../../generated/graphql';
-import { InputField, Link, handleFormErrorMessages } from '@finance/react';
-import { Page } from '../../components/page';
+import { handleFormErrorMessages, InputField, Link } from '@finance/react';
+import { Page } from '../../components';
 import { useUnauthenticatedGuard } from '../../guards';
-import appStyles from '../app.module.scss';
 
 export interface LoginFormValues {
   username: string;
@@ -17,21 +14,19 @@ export interface LoginFormValues {
 const loginGuards = [ useUnauthenticatedGuard ];
 
 export const LoginPage: FC = () => {
-  const router = useRouter();
   const toast = useToast();
-  const [, userLogin] = useUserLoginMutation();
+  const [ , userLogin ] = useUserLoginMutation();
   const guardResults = loginGuards.map((guard) => guard());
 
   return (
     <>
-      <title>login</title>
+      <title>Login</title>
       <Page guards={guardResults} size='medium'>
         <Formik
-          initialValues={{ password: '', username: ''}}
+          initialValues={{ password: '', username: '' }}
           onSubmit={async (values, { setErrors }): Promise<void> => {
             const response = await userLogin({ input: values });
             if (handleFormErrorMessages(response, setErrors, toast)) {
-              router.push('/');
               toast({
                 title: 'login success',
                 description: 'you have successfully logged in',
@@ -42,9 +37,9 @@ export const LoginPage: FC = () => {
             }
           }}
         >{({ isSubmitting }): JSX.Element => (
-            <Form className={appStyles.spacedRows}>
+            <Form className={'spacedRows'}>
               <InputField autoFocus label='Username' name='username' placeholder='username' />
-              <InputField label='Password' name='password' placeholder='password' type='password' ispassword/>
+              <InputField label='Password' name='password' placeholder='password' type='password' ispassword />
               <Stack direction='row' justifyContent='center' spacing='1rem'>
                 <Link label='Need an account?' route='/register' />
                 <Link label='Forgot password?' route='/forgot-password' />
