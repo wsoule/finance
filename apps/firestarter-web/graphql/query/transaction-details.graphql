@@ -1,5 +1,14 @@
-query TransactionDetails {
-    transactionDetails {
-        ...TransactionDetails
+query TransactionDetailsArray ($pageNumber: TransactionPageInput!) {
+  transactionDetailsArray(input: $pageNumber){
+    transactionsArray {
+      transactionTypeID
+      amount
+      accountId
+      id
     }
+    transactionsCount
+  }
+  accountDetails {
+    ...AccountDetails
+  }
 }

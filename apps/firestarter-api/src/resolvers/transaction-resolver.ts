@@ -2,7 +2,13 @@ import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { Account, Transaction, TransactionType } from '../entities';
 import { AppContext } from '../types';
 import { AuthenticationError, FormError } from '@finance/node';
-import { AccountUpdateBalanceInput, TransactionFindInput, TransactionInput } from './types/';
+import {
+  AccountUpdateBalanceInput,
+  TransactionFindInput,
+  TransactionInput,
+  TransactionPageInput,
+  TransactionsWithCount
+} from './types/';
 import { AccountResolver } from './account-resolver';
 
 @Resolver()
@@ -80,10 +86,12 @@ export class TransactionResolver {
     return existingTransaction;
   }
 
-  @Query(() => [ Transaction ])
-  async transactionDetails(
+  @Query(() => TransactionsWithCount, { nullable: true })
+  async transactionDetailsArray(
+    @Arg('input') input: TransactionPageInput,
     @Ctx() { request }: AppContext
-  ): Promise<Transaction[]> {
+  ): Promise<TransactionsWithCount | null> {
+    input.throwIfInvalid();
     const { userID } = request.session;
     if (!userID) {
       throw new AuthenticationError('Must Be Logged In To Get Transaction');
@@ -94,16 +102,21 @@ export class TransactionResolver {
         control: [ 'Account Not Found!' ]
       });
     }
-    const existingTransaction = await Transaction.find({
+    // gets an array of transactions with length dependent on the page number & page size
+    const [ transactionsArray, transactionsCount ] = await Transaction.findAndCount({
       order: {
         updatedAt: 'DESC'
-      }, where: { accountId: existingAccount.id }
+      },
+      where: {
+        accountId: existingAccount.id
+      },
+      take: input.pageNumber * 2
     });
-    if (!existingTransaction) {
+    if (!transactionsArray) {
       throw new FormError({
         control: [ 'Transaction Not Found!' ]
       });
     }
-    return existingTransaction;
+    return { transactionsArray, transactionsCount };
   }
 }

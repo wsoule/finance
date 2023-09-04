@@ -1,23 +1,41 @@
-import { FC, useEffect, useState } from 'react';
-import { Button, Stat, StatHelpText, StatLabel, StatNumber, Text, useToast } from '@chakra-ui/react';
-import { useTransactionDeleteMutation, useTransactionTypeDetailsQuery } from '../../generated/graphql';
+import {
+  FC,
+  useEffect,
+  useState
+} from 'react';
+import {
+  Button,
+  Stat,
+  StatHelpText,
+  StatNumber,
+  Text,
+  useToast
+} from '@chakra-ui/react';
+import {
+  useTransactionDeleteMutation,
+  useTransactionTypeDetailsQuery
+} from '../../generated/graphql';
 import { convertToMoney } from '@finance/core';
 import { Divider } from '@chakra-ui/layout';
-import { handleFormErrorMessages, Link } from '@finance/react';
+import {
+  handleFormErrorMessages,
+  Link
+} from '@finance/react';
 import { useRouter } from 'next/router';
 import { LinkIcon } from '@chakra-ui/icons';
 import styles from './transaction.module.scss';
-import { Form, Formik } from 'formik';
+import {
+  Form,
+  Formik
+} from 'formik';
 
 export interface TransactionProps {
-  index: number;
   transactionID: string;
   transactionType: number;
   transactionAmount: number;
 }
 
 export const Transaction: FC<TransactionProps> = ({
-  index,
   transactionID,
   transactionType,
   transactionAmount
@@ -61,7 +79,7 @@ export const Transaction: FC<TransactionProps> = ({
             onReset={(): void => setToggleDeleteForm(!toggleDeleteForm)}
           >{({ isSubmitting }): JSX.Element => (
               <Form>
-                <Button mb={2} mr={2} type={'submit'} isLoading={isSubmitting}>Confirm</Button>
+                <Button mb={2} mr={2} type={'submit'} isLoading={isSubmitting} colorScheme={'red'}>Confirm</Button>
                 <Button mb={2} type={'reset'}>Cancel</Button>
               </Form>
             )}
@@ -70,7 +88,7 @@ export const Transaction: FC<TransactionProps> = ({
       );
     } else {
       setTransactionDeleteElement(
-        <Button onClick={(): void => {
+        <Button mb={2} onClick={(): void => {
           setToggleDeleteForm(!toggleDeleteForm);
         }}>Delete</Button>
       );
@@ -79,9 +97,6 @@ export const Transaction: FC<TransactionProps> = ({
 
   return (
     <Stat key={transactionID} id={transactionID} borderWidth={'1px'} borderRadius={'lg'} padding={2} margin={'2rem'}>
-      <Link className={styles.link} route={`${router.basePath}#${transactionID}`}>
-        <LinkIcon mr={2} underlinePosition={'center'} /><StatLabel fontSize={'2xl'}>Transaction #{index}</StatLabel>
-      </Link>
       <>
         <StatNumber color={transactionAmount > 0 ? 'green.400' : 'red.400'}>
           {convertToMoney(transactionAmount)}
@@ -98,12 +113,14 @@ export const Transaction: FC<TransactionProps> = ({
         {/*}*/}
       </>
       <StatHelpText>
-        <Text fontSize={'xl'}>Transaction Type</Text>
+        <Text className={'noCursorChange'} fontSize={'xl'}>Transaction Type</Text>
         <Text fontSize={'xl'} mb={2}>{transactionTypeString}</Text>
         {transactionDeleteElement}
         <Divider />
-        <Text mt={2} fontWeight={'bold'}>TransactionID</Text>
-        {transactionID}
+        <Text className={'noCursorChange'} fontWeight={'bold'} mt={2}>TransactionID</Text>
+        <Link className={styles.link} route={`${router.basePath}#${transactionID}`}>
+          {transactionID}
+          <LinkIcon className={styles.linkIcon} ml={2} /></Link>
       </StatHelpText>
     </Stat>
   );

@@ -1,4 +1,7 @@
-import { Link as ChakraLink, LinkProps as ChakraLinkProps } from '@chakra-ui/layout';
+import {
+  Link as ChakraLink,
+  LinkProps as ChakraLinkProps
+} from '@chakra-ui/layout';
 import { default as NextLink } from 'next/link';
 import { FC } from 'react';
 

@@ -1,12 +1,39 @@
 import { Button } from '@chakra-ui/button';
-import { MoonIcon, SettingsIcon, SunIcon } from '@chakra-ui/icons';
-import { Center, Divider, Heading, Stack } from '@chakra-ui/layout';
-import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu';
+import {
+  MoonIcon,
+  SettingsIcon,
+  SunIcon
+} from '@chakra-ui/icons';
+import {
+  Center,
+  Divider
+} from '@chakra-ui/layout';
+import {
+  Menu,
+  MenuButton
+} from '@chakra-ui/menu';
 import { useToast } from '@chakra-ui/toast';
-import { useColorMode } from '@chakra-ui/react';
-import { FC, useEffect, useState } from 'react';
-import { Link, WrapperPropsSize, wrapperSizeToPixels } from '@finance/react';
-import { useUserDetailsQuery, useUserLogoutMutation } from '../../generated/graphql';
+import {
+  Heading,
+  MenuItem,
+  MenuList,
+  Stack,
+  useColorMode
+} from '@chakra-ui/react';
+import {
+  FC,
+  useEffect,
+  useState
+} from 'react';
+import {
+  Link,
+  WrapperPropsSize,
+  wrapperSizeToPixels
+} from '@finance/react';
+import {
+  useUserDetailsQuery,
+  useUserLogoutMutation
+} from '../../generated/graphql';
 import { useRouter } from 'next/router';
 import styles from './nav-bar.module.scss';
 

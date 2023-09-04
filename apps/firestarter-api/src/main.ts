@@ -4,10 +4,16 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import { default as bodyParser } from 'body-parser';
 import { default as RedisStore } from 'connect-redis';
 import { default as cors } from 'cors';
-import { default as express, Express } from 'express';
+import {
+  default as express,
+  Express
+} from 'express';
 import { default as expressSession } from 'express-session';
 import { createServer as createHttpServer } from 'http';
-import { default as IoRedis, Redis } from 'ioredis';
+import {
+  default as IoRedis,
+  Redis
+} from 'ioredis';
 import { join as pathJoin } from 'path';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';

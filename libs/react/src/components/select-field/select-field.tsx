@@ -29,7 +29,7 @@ export const SelectFormInput: FC<SelectFormInputProps> = ({
   return (
     <FormControl isInvalid={!!fieldError && touched} mb={mb}>
       <FormLabel htmlFor={field.name}>{label}</FormLabel>
-      <Select {...field} {...props} name={field.name}>
+      <Select {...field} {...props} id={field.name} name={field.name}>
         {children}
       </Select>
       <FormErrorMessage>{fieldError}</FormErrorMessage>

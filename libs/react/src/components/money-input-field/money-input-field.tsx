@@ -63,6 +63,8 @@ export const MoneyInputField: FC<MoneyInputFieldProps> = ({
         <Input
           {...props}
           {...field}
+          name={field.name}
+          id={field.name}
           value={formattedValue}
           onChange={updateInput}
         />

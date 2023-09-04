@@ -9,4 +9,6 @@ export * from './user-change-password-input';
 export * from './user-change-password-token-check-input';
 export * from './transaction-input';
 export * from './transaction-find-input';
+export * from './transaction-page-input';
+export * from './transactions-with-count';
 export * from './new-transaction-type-input';

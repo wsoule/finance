@@ -1,6 +1,5 @@
 mutation TransactionDelete ($input: TransactionFindInput!) {
   transactionDelete (input: $input) {
-    id
-    amount
+    ...TransactionDetails
   }
 }
