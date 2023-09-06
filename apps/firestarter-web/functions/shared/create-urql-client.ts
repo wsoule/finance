@@ -103,11 +103,12 @@ export function createUrqlClient(): Client {
               );
               updateQuery<UserLogoutMutation, TransactionDetailsArrayQuery>(
                 cache,
-                { query: TransactionDetailsDocument },
+                { query: TransactionDetailsArrayDocument },
                 result,
                 () => {
                   return {
-                    transactionDetails: null
+                    transactionDetails: null,
+                    accountDetails: null
                   };
                 }
               );
@@ -118,9 +119,7 @@ export function createUrqlClient(): Client {
                 cache,
                 { query: TransactionDetailsArrayDocument },
                 result,
-                (transactionDetailsResult, query /*{ accountDetails, transactionDetailsArray: oldTransactionArray }*/) => {
-                  console.log('new transac detes', transactionDetailsResult);
-                  console.log('oldthings', query);
+                (transactionDetailsResult, { accountDetails, transactionDetailsArray: oldTransactionArray }) => {
                   if (accountDetails?.balance != null) {
                     accountDetails.balance = accountDetails?.balance + transactionDetailsResult.transactionCreate.amount;
                   }
@@ -129,12 +128,12 @@ export function createUrqlClient(): Client {
                   }
                   if (oldTransactionArray) {
                     return {
-                      transactionDetails: [ transactionDetailsResult.transactionCreate, ...oldTransactionArray.transactionsArray ],
+                      transactionDetailsArray: [ transactionDetailsResult.transactionCreate, ...oldTransactionArray ],
                       accountDetails
                     };
                   }
                   return {
-                    transactionDetails: [ transactionDetailsResult.transactionCreate ],
+                    transactionDetailsArray: [ transactionDetailsResult.transactionCreate ],
                     accountDetails
                   };
                 }
@@ -144,12 +143,12 @@ export function createUrqlClient(): Client {
               // updates the transactionDetailsQuery when the transactionDelete mutation is called.
               updateQuery<TransactionDeleteMutation, TransactionDetailsArrayQuery>(
                 cache,
-                { query: TransactionDetailsDocument },
+                { query: TransactionDetailsArrayDocument },
                 result,
                 (transactionDetailsResult, { accountDetails, transactionDetailsArray: oldTransactionDetails }) => {
-                  console.log('account details', accountDetails);
+                  console.log('oldTrans', oldTransactionDetails);
                   // create an array of the oldTransaction details & remove the deleted item
-                  const indexOfTransactionToDelete = oldTransactionDetails?.transactionsArray.findIndex((item) => {
+                  const indexOfTransactionToDelete = oldTransactionDetails?.findIndex((item) => {
                     return item.id === transactionDetailsResult.transactionDelete.id;
                   });
                   if (accountDetails?.balance) {
@@ -159,10 +158,10 @@ export function createUrqlClient(): Client {
                     accountDetails.updatedAt = transactionDetailsResult.transactionDelete.updatedAt;
                   }
                   if (indexOfTransactionToDelete != null && indexOfTransactionToDelete > -1) {
-                    oldTransactionDetails?.transactionsArray.splice(indexOfTransactionToDelete, 1);
+                    oldTransactionDetails?.splice(indexOfTransactionToDelete, 1);
                   }
                   return {
-                    transactionDetails: oldTransactionDetails,
+                    transactionDetailsArray: oldTransactionDetails,
                     accountDetails
                   };
                 }

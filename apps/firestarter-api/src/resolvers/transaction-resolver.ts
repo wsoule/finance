@@ -5,9 +5,7 @@ import { AuthenticationError, FormError } from '@finance/node';
 import {
   AccountUpdateBalanceInput,
   TransactionFindInput,
-  TransactionInput,
-  TransactionPageInput,
-  TransactionsWithCount
+  TransactionInput
 } from './types/';
 import { AccountResolver } from './account-resolver';
 
@@ -86,12 +84,10 @@ export class TransactionResolver {
     return existingTransaction;
   }
 
-  @Query(() => TransactionsWithCount, { nullable: true })
+  @Query(() => [ Transaction ], { nullable: true })
   async transactionDetailsArray(
-    @Arg('input') input: TransactionPageInput,
     @Ctx() { request }: AppContext
-  ): Promise<TransactionsWithCount | null> {
-    input.throwIfInvalid();
+  ): Promise<Transaction[] | null> {
     const { userID } = request.session;
     if (!userID) {
       throw new AuthenticationError('Must Be Logged In To Get Transaction');
@@ -103,20 +99,19 @@ export class TransactionResolver {
       });
     }
     // gets an array of transactions with length dependent on the page number & page size
-    const [ transactionsArray, transactionsCount ] = await Transaction.findAndCount({
+    const [ transactionsArray ] = await Transaction.findAndCount({
       order: {
         updatedAt: 'DESC'
       },
       where: {
         accountId: existingAccount.id
-      },
-      take: input.pageNumber * 2
+      }
     });
     if (!transactionsArray) {
       throw new FormError({
         control: [ 'Transaction Not Found!' ]
       });
     }
-    return { transactionsArray, transactionsCount };
+    return transactionsArray;
   }
 }
