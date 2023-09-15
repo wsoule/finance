@@ -115,55 +115,58 @@ export function createUrqlClient(): Client {
                 }
               );
             },
+            // TODO - need to make the use TransactionDetailsArrayQuery
             transactionCreate: (result, _args, cache, _info) => {
               // updates transactionDetailsQuery cache when transactionCreate is called.
-              updateQuery<TransactionCreateMutation, TransactionDetailsArrayQuery>(
+              updateQuery<TransactionCreateMutation, TransactionDetailsQuery>(
                 cache,
-                { query: TransactionDetailsArrayDocument },
+                { query: TransactionDetailsDocument },
                 result,
-                (transactionDetailsResult, { accountDetails, transactionDetailsArray: oldTransactionArray }) => {
+                (transactionDetailsResult, { accountDetails, transactionDetails: oldTransactionDetails }) => {
                   if (accountDetails?.balance != null) {
                     accountDetails.balance = accountDetails?.balance + transactionDetailsResult.transactionCreate.amount;
                   }
                   if (accountDetails?.updatedAt) {
                     accountDetails.updatedAt = transactionDetailsResult.transactionCreate.updatedAt;
                   }
-                  if (oldTransactionArray) {
+                  if (oldTransactionDetails) {
                     return {
-                      transactionDetailsArray: [ transactionDetailsResult.transactionCreate, ...oldTransactionArray ],
+                      transactionDetails: [ transactionDetailsResult.transactionCreate, ...oldTransactionDetails ],
+                      accountDetails
+                    };
+                  } else {
+                    return {
+                      transactionDetails: [ transactionDetailsResult.transactionCreate ],
                       accountDetails
                     };
                   }
-                  return {
-                    transactionDetailsArray: [ transactionDetailsResult.transactionCreate ],
-                    accountDetails
-                  };
                 }
               );
             },
+            // TODO - need to make this use transactionDetailsArrayQuery
             transactionDelete: (result, _args, cache, _info) => {
               // updates the transactionDetailsQuery when the transactionDelete mutation is called.
-              updateQuery<TransactionDeleteMutation, TransactionDetailsArrayQuery>(
+              updateQuery<TransactionDeleteMutation, TransactionDetailsQuery>(
                 cache,
-                { query: TransactionDetailsArrayDocument },
+                { query: TransactionDetailsDocument },
                 result,
-                (transactionDetailsResult, { accountDetails, transactionDetailsArray: oldTransactionDetails }) => {
-                  console.log('oldTrans', oldTransactionDetails);
+                (transactionDetailsResult, { accountDetails, transactionDetails: oldTransactionDetails }) => {
                   // create an array of the oldTransaction details & remove the deleted item
-                  const indexOfTransactionToDelete = oldTransactionDetails?.transactionsArray.findIndex((item) => {
+                  const oldTransactionDetailsArray = oldTransactionDetails;
+                  const itemToDelete = oldTransactionDetailsArray.findIndex((item) => {
                     return item.id === transactionDetailsResult.transactionDelete.id;
                   });
+                  if (itemToDelete > -1) {
+                    oldTransactionDetailsArray.splice(itemToDelete, 1);
+                  }
                   if (accountDetails?.balance) {
                     accountDetails.balance = accountDetails.balance - transactionDetailsResult.transactionDelete.amount;
                   }
                   if (accountDetails?.updatedAt) {
                     accountDetails.updatedAt = transactionDetailsResult.transactionDelete.updatedAt;
                   }
-                  if (indexOfTransactionToDelete != null && indexOfTransactionToDelete > -1) {
-                    oldTransactionDetails?.transactionsArray.splice(indexOfTransactionToDelete, 1);
-                  }
                   return {
-                    transactionDetailsArray: oldTransactionDetails,
+                    transactionDetails: oldTransactionDetailsArray,
                     accountDetails
                   };
                 }

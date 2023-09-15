@@ -28,7 +28,6 @@ export const TransactionAdd: FC<TransactionAddProps> = ({
       setTransactionTypeList(transactionListData.transactionTypeList?.map((transactionType) => {
         return (
           <option
-
             key={transactionType.id}
             value={transactionType.transactionType}
           >

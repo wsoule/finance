@@ -2,4 +2,7 @@ query TransactionDetails {
   transactionDetails {
     ...TransactionDetails
   }
+  accountDetails {
+    ...AccountDetails
+  }
 }

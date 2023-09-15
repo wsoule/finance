@@ -120,7 +120,6 @@ export class TransactionResolver {
     return { transactionsArray, transactionsCount };
   }
 
-
   @Query(() => [ Transaction ])
   async transactionDetails(
     @Ctx() { request }: AppContext
