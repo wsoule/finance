@@ -53,6 +53,7 @@ export const Index: FC = () => {
       );
     }
   }, [ router, userDetailsFetching, username ]);
+
   return (
     <>
       <title>Home</title>

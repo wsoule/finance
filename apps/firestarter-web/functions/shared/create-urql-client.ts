@@ -17,6 +17,8 @@ import {
   TransactionDeleteMutation,
   TransactionDetailsArrayDocument,
   TransactionDetailsArrayQuery,
+  TransactionDetailsDocument,
+  TransactionDetailsQuery,
   UserCreateMutation,
   UserDetailsDocument,
   UserDetailsQuery,
@@ -107,7 +109,7 @@ export function createUrqlClient(): Client {
                 result,
                 () => {
                   return {
-                    transactionDetails: null,
+                    transactionDetailsArray: null,
                     accountDetails: null
                   };
                 }
@@ -148,7 +150,7 @@ export function createUrqlClient(): Client {
                 (transactionDetailsResult, { accountDetails, transactionDetailsArray: oldTransactionDetails }) => {
                   console.log('oldTrans', oldTransactionDetails);
                   // create an array of the oldTransaction details & remove the deleted item
-                  const indexOfTransactionToDelete = oldTransactionDetails?.findIndex((item) => {
+                  const indexOfTransactionToDelete = oldTransactionDetails?.transactionsArray.findIndex((item) => {
                     return item.id === transactionDetailsResult.transactionDelete.id;
                   });
                   if (accountDetails?.balance) {
@@ -158,7 +160,7 @@ export function createUrqlClient(): Client {
                     accountDetails.updatedAt = transactionDetailsResult.transactionDelete.updatedAt;
                   }
                   if (indexOfTransactionToDelete != null && indexOfTransactionToDelete > -1) {
-                    oldTransactionDetails?.splice(indexOfTransactionToDelete, 1);
+                    oldTransactionDetails?.transactionsArray.splice(indexOfTransactionToDelete, 1);
                   }
                   return {
                     transactionDetailsArray: oldTransactionDetails,

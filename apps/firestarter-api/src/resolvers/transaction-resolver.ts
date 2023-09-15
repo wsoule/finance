@@ -5,7 +5,9 @@ import { AuthenticationError, FormError } from '@finance/node';
 import {
   AccountUpdateBalanceInput,
   TransactionFindInput,
-  TransactionInput
+  TransactionInput,
+  TransactionPageInput,
+  TransactionsWithCount
 } from './types/';
 import { AccountResolver } from './account-resolver';
 
@@ -84,10 +86,12 @@ export class TransactionResolver {
     return existingTransaction;
   }
 
-  @Query(() => [ Transaction ], { nullable: true })
+  @Query(() => TransactionsWithCount, { nullable: true })
   async transactionDetailsArray(
+    @Arg('input') input: TransactionPageInput,
     @Ctx() { request }: AppContext
-  ): Promise<Transaction[] | null> {
+  ): Promise<TransactionsWithCount | null> {
+    input.throwIfInvalid();
     const { userID } = request.session;
     if (!userID) {
       throw new AuthenticationError('Must Be Logged In To Get Transaction');
@@ -99,19 +103,48 @@ export class TransactionResolver {
       });
     }
     // gets an array of transactions with length dependent on the page number & page size
-    const [ transactionsArray ] = await Transaction.findAndCount({
+    const [ transactionsArray, transactionsCount ] = await Transaction.findAndCount({
       order: {
         updatedAt: 'DESC'
       },
       where: {
         accountId: existingAccount.id
-      }
+      },
+      take: input.pageNumber * 2
     });
     if (!transactionsArray) {
       throw new FormError({
         control: [ 'Transaction Not Found!' ]
       });
     }
-    return transactionsArray;
+    return { transactionsArray, transactionsCount };
+  }
+
+
+  @Query(() => [ Transaction ])
+  async transactionDetails(
+    @Ctx() { request }: AppContext
+  ): Promise<Transaction[]> {
+    const { userID } = request.session;
+    if (!userID) {
+      throw new AuthenticationError('Must Be Logged In To Get Transaction');
+    }
+    const existingAccount = await Account.findOneBy({ userID });
+    if (!existingAccount) {
+      throw new FormError({
+        control: [ 'Account Not Found!' ]
+      });
+    }
+    const existingTransaction = await Transaction.find({
+      order: {
+        updatedAt: 'DESC'
+      }, where: { accountId: existingAccount.id }
+    });
+    if (!existingTransaction) {
+      throw new FormError({
+        control: [ 'Transaction Not Found!' ]
+      });
+    }
+    return existingTransaction;
   }
 }

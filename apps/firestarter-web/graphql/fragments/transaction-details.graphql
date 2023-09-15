@@ -3,4 +3,5 @@ fragment TransactionDetails on Transaction {
     updatedAt
     id
     transactionTypeID
+    accountId
 }

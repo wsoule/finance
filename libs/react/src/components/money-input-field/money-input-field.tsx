@@ -27,6 +27,7 @@ export const MoneyInputField: FC<MoneyInputFieldProps> = ({
   value,
   ...props
 }) => {
+  // TODO - fix bug where you cannot type '.' at the begining, need to replace the '.' with '0.'
   // TODO - fix error where you have to enter a value in order to have a negative value
   const [ field, { touched, error: fieldError } ] = useField(props.name);
   const [ formattedValue, setFormattedValue ] = useState<string>('');

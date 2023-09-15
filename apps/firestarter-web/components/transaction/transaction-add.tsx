@@ -23,7 +23,6 @@ export const TransactionAdd: FC<TransactionAddProps> = ({
   const handleValueChange = (value: number | null): void => {
     setTransactionValue(value || 0);
   };
-
   useEffect(() => {
     if (!transactionListFetching && transactionListData?.transactionTypeList) {
       setTransactionTypeList(transactionListData.transactionTypeList?.map((transactionType) => {

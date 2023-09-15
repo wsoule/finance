@@ -1,6 +1,7 @@
 import {
   FC,
   useEffect,
+  useRef,
   useState
 } from 'react';
 import {
@@ -9,7 +10,8 @@ import {
   Transaction
 } from '../../components';
 import {
-  useTransactionDetailsArrayQuery
+  useTransactionDetailsArrayQuery,
+  useTransactionDetailsQuery
 } from '../../generated/graphql';
 import {
   Button,
@@ -26,12 +28,21 @@ const loggedInGuards = [ useAuthenticatedGuard ];
 export const TransactionsPage: FC = () => {
   const router = useRouter();
   const showModal = router.query['create-transaction'];
-  const [ { data: transactionData, fetching: transactionsFetching } ] = useTransactionDetailsArrayQuery();
+  const [ pageNumber, setPageNumber ] = useState<number>(1);
+  const [ { data: transactionData, fetching: transactionsFetching } ] = useTransactionDetailsArrayQuery({
+    variables: {
+      pageNumber: { pageNumber }
+    }
+  });
   const [ transactionPageContents, setTransactionPageContents ] = useState<JSX.Element | JSX.Element[]>();
   const routeGuards = loggedInGuards.map((guard) => guard());
 
+  const loadMoreData = (): void => {
+    setPageNumber((prevPageNumber) => prevPageNumber + 1);
+  };
+
   useEffect(() => {
-    const transactionArray = transactionData?.transactionDetailsArray;
+    const transactionArray = transactionData?.transactionDetailsArray?.transactionsArray;
     if (transactionsFetching && !transactionArray) {
       setTransactionPageContents(
         <Loading isLoading={transactionsFetching} loadingText={'Loading Transactions...'} />
@@ -68,6 +79,14 @@ export const TransactionsPage: FC = () => {
             {transactionPageContents}
           </div>
           {/*{(transactionPageContents as JSX.Element[]).length}*/}
+          <center>
+            <Button isLoading={transactionsFetching} onClick={loadMoreData}>
+              {transactionsFetching
+                ? <Spinner />
+                : <Text>load more</Text>
+              }
+            </Button>
+          </center>
           {/*<center>{addPageButtonText}</center>*/}
         </Page>
       </div>
