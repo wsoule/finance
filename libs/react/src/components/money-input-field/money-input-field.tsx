@@ -35,9 +35,11 @@ export const MoneyInputField: FC<MoneyInputFieldProps> = ({
   const updateInput = (event: ChangeEvent<HTMLInputElement>): void => {
     const eventTarget = event.target.value;
     const numberValue = ((eventTarget[eventTarget.length - 1] === '-') ? -1 : 1) * parseFloat(eventTarget.replace(/,/g, ''));
-    const stringDecimalValue = (eventTarget === '-' && eventTarget.length === 1)
+    const stringDecimalValue = ((eventTarget === '-' && eventTarget.length === 1) || (eventTarget === '.' && formattedValue[0] === '-'))
       ? eventTarget
-      : (numberValue.toLocaleString() + ((eventTarget.match(/(\.0*)(?!\d)/)?.[1]) ?? ''));
+      : (eventTarget === '.' && eventTarget.length === 1)
+        ? '0.'
+        : (numberValue.toLocaleString() + ((eventTarget.match(/(\.0*)(?!\d)/)?.[1]) ?? ''));
     if (stringDecimalValue.match(/^-?(?:\d{1,3}(?:,\d{3})*(?:\.\d{0,2})?)?$/)) {
       setFormattedValue(stringDecimalValue);
       if (getNumberValue) {
