@@ -16,6 +16,7 @@ import { entities } from './entities';
 import { environment } from './environments';
 import { resolvers } from './resolvers';
 import { AppContext } from './types';
+import { getEnvVariable } from './environments/base-environment';
 
 async function addGraphQLMiddleware(
   app: Express,
@@ -100,7 +101,7 @@ async function main(): Promise<void> {
     res.send({ message: 'Welcome to firestarter-api' });
   });
 
-  const redisClient = new IoRedis();
+  const redisClient = new Redis(getEnvVariable('REDIS_URL'));
 
   await Promise.all([
     addGraphQLMiddleware(app, redisClient),

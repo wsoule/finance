@@ -1,6 +1,6 @@
 import { Environment } from './types';
 
-function getEnvVariable(variableName: string): string {
+export function getEnvVariable(variableName: string): string {
   const value = process.env[variableName];
   if (!value?.trim()) {
     throw new Error(`Environment variable '${variableName} is not set.`);
