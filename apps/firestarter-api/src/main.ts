@@ -89,7 +89,7 @@ async function main(): Promise<void> {
 
   app.use(cors({
     credentials: true,
-    origin: environment.urls.local
+    origin: environment.urls.web
   }));
 
   app.use(bodyParser.json());
@@ -100,7 +100,10 @@ async function main(): Promise<void> {
     res.send({ message: 'Welcome to firestarter-api' });
   });
 
-  const redisClient = new IoRedis();
+  const redisClient = new IoRedis({
+    host: 'red-ckap38ciibqc73akvhmg',
+    port: 6379
+  });
 
   await Promise.all([
     addGraphQLMiddleware(app, redisClient),

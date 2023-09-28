@@ -8,8 +8,6 @@ export interface Environment {
     secret: string;
   };
   urls: {
-    local: string;
-    dev: string;
-    prod: string;
+   web: string;
   };
 }
