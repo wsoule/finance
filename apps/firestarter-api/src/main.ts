@@ -101,7 +101,7 @@ async function main(): Promise<void> {
     res.send({ message: 'Welcome to firestarter-api' });
   });
 
-  const redisClient = new Redis(getEnvVariable('REDIS_URL'));
+  const redisClient = new IoRedis(getEnvVariable('REDIS_URL'));
 
   await Promise.all([
     addGraphQLMiddleware(app, redisClient),
