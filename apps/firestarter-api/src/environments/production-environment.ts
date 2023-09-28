@@ -3,5 +3,8 @@ import { Environment } from './types';
 
 export const environment: Environment = {
   ...baseEnvironment,
-  isProd: true
+  isProd: true,
+  urls: {
+    web: ''
+  }
 };

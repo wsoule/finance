@@ -140,13 +140,13 @@ export class UserResolver {
     await sendEmail({
       from: 'firestarter@finance.com',
       html: [
-        `<a href="${environment.urls.local}/change-password/${token}">Change Password</a>`
+        `<a href="${environment.urls.web}/change-password/${token}">Change Password</a>`
       ].join('\n'),
       subject: 'password Change Request',
       to: user.email,
       text: 'hello'
     });
-    console.log(`${environment.urls.local}/change-password/${token}`);
+    console.log(`${environment.urls.web}/change-password/${token}`);
 
     return true;
   }
