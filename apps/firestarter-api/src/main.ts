@@ -74,6 +74,7 @@ async function addRedisSessionMiddleware(
       })
     })
   );
+  console.log('getting to redis');
 }
 
 async function initializeDataSource(): Promise<void> {
@@ -103,12 +104,16 @@ async function main(): Promise<void> {
 
   const redisClient = new IoRedis(getEnvVariable('REDIS_URL'));
 
+  console.log('starting up redis stuff');
+
   await Promise.all([
     addGraphQLMiddleware(app, redisClient),
     addRedisSessionMiddleware(app, redisClient),
     initializeDataSource()
   ]);
 
+  console.log('got past starting up');
+  
   const port = process.env.PORT || 3333;
   const server = app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}/api`);
