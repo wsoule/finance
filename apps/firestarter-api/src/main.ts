@@ -88,7 +88,7 @@ async function initializeDataSource(): Promise<void> {
 
 async function main(): Promise<void> {
   const app = express();
-
+  app.set('proxy', 1);
   app.use(cors({
     credentials: true,
     origin: environment.urls.web

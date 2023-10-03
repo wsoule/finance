@@ -1,5 +1,5 @@
 overwrite: true
-schema: "http://localhost:3333/graphql"
+schema: "http://https://finance-gmr8.onrender.com/graphql"
 documents: "apps/firestarter-web/graphql/**/*.graphql"
 generates:
   apps/firestarter-web/generated/graphql.tsx:
